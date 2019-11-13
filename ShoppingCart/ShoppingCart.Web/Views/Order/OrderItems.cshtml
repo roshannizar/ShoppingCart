@@ -1,0 +1,62 @@
+﻿@{
+    ViewData["Title"] = "Kraggle | Order Items";
+}
+
+<div class="container-fluid">
+    <h5>Order Items</h5>
+    <hr />
+
+    <label>Customer Name: </label>
+    <select class="badge" id="customerId" asp-items="@ViewBag.CustomerList">
+        <option value="0">-- Please choose a customer --</option>
+    </select>
+    <br /><br />
+
+    <table class="table" id="tableForm">
+        <tr class="thead-dark">
+            <th>Product Name</th>
+            <th colspan="2">Description</th>
+            <th>Unit Price</th>
+            <th>Quantity</th>
+            <th>Total Amount</th>
+            <th>Controls</th>
+        </tr>
+        <tr>
+            <td>
+                <select class="badge" id="productId" onchange="LoadProducts(this.value)" asp-items="@ViewBag.ProductList">
+                    <option value="0">-- Please choose a product --</option>
+                </select>
+            </td>
+            <td colspan="2">
+                <p id="description">description</p>
+            </td>
+            <td>
+                <p id="unitprice">Rs: 50</p>
+            </td>
+            <td>
+                <input type="number" disabled class="form-control col-md-6" id="quantity" min="0" placeholder="Eg: 2" onchange="CalculateTotal(this.value)" />
+                <span id="hiddenQuantity" class="badge badge-secondary small" hidden>Quantity In Stock: <span id="quantityInStock">2</span></span>
+            </td>
+            <td>
+                <p id="totalamount">Rs: 100</p>
+            </td>
+            <td>
+                <button type="button" class="btn btn-outline-primary btn-sm" onclick="CreateOrderLine()">Add Item</button>
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>Grand Total</td>
+            <td>
+                <button class="btn btn-primary btn-sm">Confirm Order</button>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<script src="~/js/add-order-items.js"></script>
+<script src="~/js/load-product.js"></script>

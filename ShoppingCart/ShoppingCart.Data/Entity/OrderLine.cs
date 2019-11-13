@@ -20,7 +20,5 @@ namespace ShoppingCart.Data.Entity
         public int Quantity { get; set; }
         [Required]
         public double UnitPrice { get; set; }
-        [Required]
-        public StatusType Status { get; set; }
     }
 }

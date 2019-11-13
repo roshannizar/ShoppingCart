@@ -20,5 +20,12 @@ namespace ShoppingCart.Web.Controllers
         {
             return View();
         }
+
+
+        public JsonResult GetProductById(int id)
+        {
+            var product = productService.GetProduct(id);
+            return Json(product);
+        }
     }
 }
