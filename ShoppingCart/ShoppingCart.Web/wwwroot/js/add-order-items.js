@@ -40,7 +40,12 @@ function CreateOrderLine() {
         orderLine.quantity = parseInt(quantity);
 
         products.push(orderLine);
-        console.log(products);
+
+
+        document.getElementById("productId").value = 0;
+        document.getElementById("description").innerHTML = "Description";
+        document.getElementById("unitprice").innerHTML = "Rs: 50";
+        document.getElementById("quantity").value = "";
     } else {
         console.log("Product is empty!");
     }
@@ -82,5 +87,4 @@ function CreateTableRow(productName, description, unitPrice, quantity) {
     quantityText.value = quantity;
     totalCell.innerHTML = "Rs: "+parseInt(quantity) * parseInt(unitPrice);
     editBtnCell.appendChild(editBtn);
-    
 }
