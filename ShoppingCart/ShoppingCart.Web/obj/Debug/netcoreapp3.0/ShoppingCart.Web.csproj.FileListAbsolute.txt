@@ -171,3 +171,4 @@ C:\Users\Roshan\Documents\GitHub\ShoppingCart\ShoppingCart\ShoppingCart.Web\obj\
 C:\Users\Roshan\Documents\GitHub\ShoppingCart\ShoppingCart\ShoppingCart.Web\obj\Debug\netcoreapp3.0\ShoppingCart.Web.csproj.CopyComplete
 C:\Users\Roshan\Documents\GitHub\ShoppingCart\ShoppingCart\ShoppingCart.Web\obj\Debug\netcoreapp3.0\ShoppingCart.Web.dll
 C:\Users\Roshan\Documents\GitHub\ShoppingCart\ShoppingCart\ShoppingCart.Web\obj\Debug\netcoreapp3.0\ShoppingCart.Web.pdb
+C:\Users\Roshan\Documents\GitHub\ShoppingCart\ShoppingCart\ShoppingCart.Web\bin\Debug\netcoreapp3.0\libman.json

@@ -63,7 +63,8 @@ namespace ShoppingCart.Web.Controllers
                     Status = StatusType.Pending
                 };
 
-                orderService.Create(order);
+                var orderId = orderService.Create(order);
+
             }
             catch(Exception)
             {

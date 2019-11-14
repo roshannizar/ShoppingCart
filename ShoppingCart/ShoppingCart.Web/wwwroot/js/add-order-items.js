@@ -29,6 +29,7 @@ function CreateOrderLine() {
 
     var orderLine = {
         productId: 0,
+        productName:"",
         unitPrice: 0,
         quantity: 0,
         orderId:0
@@ -40,6 +41,7 @@ function CreateOrderLine() {
         orderLine.productId = parseInt(productId);
         orderLine.unitPrice = parseInt(unitPrice);
         orderLine.quantity = parseInt(quantity);
+        orderLine.productName = productName;
         orderLine.orderId = 0;
         var exist = false;
 
@@ -93,34 +95,34 @@ function ConfirmOrder() {
 
         order.CustomerId = parseInt(customerId);
         order.Date = currentDate.replace(/^"(.*)"$/, '$1');
-        var http = new XMLHttpRequest();
+        //var http = new XMLHttpRequest();
 
-        //const url = '../Order/PlaceOrder';
+        const url = '../Order/PlaceOrder';
 
-        //const request = new Request(url, {
-        //    method: 'POST',
-        //    body: JSON.stringify(order),
-        //    headers: new Headers({
-        //        'Content-Type':'application/json'
-        //    })
-        //});
+        const request = new Request(url, {
+            method: 'POST',
+            body: JSON.stringify(order),
+            headers: new Headers({
+                'Content-Type':'application/json'
+            })
+        });
 
-        //fetch(request)
-        //    .then(res => res.json())
-        //    .then(res => console.log(res));
+        fetch(request)
+            .then(res => res.json())
+            .then(res => console.log(res));
 
-        http.open("POST", "/Order/PlaceOrder/", true);
-        http.setRequestHeader('Content-Type', 'application/json');
-        http.send(JSON.stringify(order));
+        //http.open("POST", "/Order/PlaceOrder", true);
+        //http.setRequestHeader('Content-Type', 'application/json');
+        //http.send(JSON.stringify(order));
 
-        http.onreadystatechange = function () {
-            if (this.readyState == 4 && this.status == 200) {
-                console.log(http.responseText);
-                console.log("Done");
-            } else {
-                console.log("Error");
-            }
-        };
+        //http.onreadystatechange = function () {
+        //    if (this.readyState == 4 && this.status == 200) {
+        //        console.log(http.responseText);
+        //        console.log("Done");
+        //    } else {
+        //        console.log("Error");
+        //    }
+        //};
 
     } else {
         alert("Choose a customer");
