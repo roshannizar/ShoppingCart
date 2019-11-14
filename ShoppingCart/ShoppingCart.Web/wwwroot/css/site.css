@@ -69,3 +69,38 @@ body {
   white-space: nowrap;
   line-height: 60px; /* Vertically center the text there */
 }
+
+.border-color-strip {
+    border-top: 4px solid #28334AFF;
+}
+
+.border-color-left {
+    border-left: 4px solid #28334AFF;
+}
+
+.margin {
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+
+.right {
+    float: right
+}
+
+.left {
+    float: left;
+}
+
+.slight-top {
+    margin-top: 10px;
+}
+
+.small-width {
+    width: 5%;
+}
+
+.no-outline {
+    outline: none;
+    border: 3px solid;
+    background-color: transparent;
+}

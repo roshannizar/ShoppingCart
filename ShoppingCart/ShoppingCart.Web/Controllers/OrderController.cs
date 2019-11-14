@@ -65,8 +65,32 @@ namespace ShoppingCart.Web.Controllers
 
                 var orderId = orderService.Create(order);
 
+
+                for (int i= 0;i < orderPlacementViewModel.OrderItems.Count;i++)
+                {
+                    var orderline = new OrderLine()
+                    {
+                        ProductId = orderPlacementViewModel.OrderItems[i].ProductId,
+                        Quantity = orderPlacementViewModel.OrderItems[i].Quantity,
+                        UnitPrice = orderPlacementViewModel.OrderItems[i].UnitPrice,
+                        OrderId = orderId
+                    };
+
+                    orderLineService.Create(orderline);
+
+                    //var quantityInStock = productService.GetProduct(orderitems.Id).Quantity;
+                    //var remainingStock = quantityInStock - orderitems.Quantity;
+
+                    //var product = new Product
+                    //{
+                    //    Id = orderitems.Id,
+                    //    Quantity = remainingStock
+                    //};
+
+                    //var updatedProduct = productService.Update(product);
+                }
             }
-            catch(Exception)
+            catch (Exception)
             {
                 throw new Exception();
             }

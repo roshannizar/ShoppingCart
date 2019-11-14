@@ -123,6 +123,7 @@ function ConfirmOrder() {
         //        console.log("Error");
         //    }
         //};
+        location.replace("/Order/Index");
 
     } else {
         alert("Choose a customer");

@@ -6,19 +6,22 @@
 <div class="container-fluid">
     <h5>Order</h5>
     <a href="/Order/OrderItems" class="btn btn-outline-info btn-sm">New Order</a>
-
+    <br /><br />
     @{ 
-        <div class="row">
-            @if(Model != null)
-            {
-                foreach(var orders in Model)
+        <div class="container-fluid">
+            <div class="row">
+                @if (Model != null)
                 {
-                    <p>@orders.Id</p>
+                    foreach (var orders in Model)
+                    {
+                        <partial name="PartialView/_List" model="orders" />
+                    }
                 }
-            }else
-            {
-                <p>No Orders Bro!</p>
-            }
+                else
+                {
+                    <p>No Orders Bro!</p>
+                }
+            </div>
         </div>
     }
 </div>

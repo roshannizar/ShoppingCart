@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using ShoppingCart.Core.Exceptions;
 using ShoppingCart.Core.ServiceInterface;
 using ShoppingCart.Data.Context;
 using ShoppingCart.Data.Entity;
@@ -24,7 +25,15 @@ namespace ShoppingCart.Core.Services
 
         public void Create(OrderLine orderLine)
         {
-            db.Add(orderLine);
+            try
+            {
+                db.Add(orderLine);
+                Commit();
+            }
+            catch(OrderLineNotFoundException)
+            {
+                throw new OrderLineNotFoundException();
+            }
         }
 
         public OrderLine Delete(int id)

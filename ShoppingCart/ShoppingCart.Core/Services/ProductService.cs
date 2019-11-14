@@ -86,9 +86,9 @@ namespace ShoppingCart.Core.Services
         {
             try
             {
-                var entity = db.Products.Attach(product);
-                entity.State = EntityState.Modified;
-
+                var entry = db.Entry(product);
+                entry.State = EntityState.Modified;
+                db.SaveChanges();
                 return product;
             }
             catch(ProductNotFoundException)

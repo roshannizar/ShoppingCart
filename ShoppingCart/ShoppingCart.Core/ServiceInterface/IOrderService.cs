@@ -9,6 +9,7 @@ namespace ShoppingCart.Core.ServiceInterface
         IEnumerable<Order> GetOrders();
         Order GetOrder(int id);
         int Create(Order order);
+        int GetLastOrderId();
         int Commit();
     }
 }

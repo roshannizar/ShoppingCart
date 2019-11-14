@@ -34,7 +34,15 @@ namespace ShoppingCart.Core.Services
             {
                 throw new OrderNotFoundException();
             }
+        }
 
+        public int GetLastOrderId()
+        {
+            var query = db.Orders
+                .Select(x => x.Id)
+                .LastOrDefault();
+
+            return query;
         }
 
         public Order GetOrder(int id)
