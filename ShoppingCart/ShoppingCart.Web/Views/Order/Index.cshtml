@@ -1,4 +1,4 @@
-﻿
+﻿@model IEnumerable<ShoppingCart.Data.Entity.Order>
 @{
     ViewData["Title"] = "Kraggle | Order";
 }
@@ -6,5 +6,20 @@
 <div class="container-fluid">
     <h5>Order</h5>
     <a href="/Order/OrderItems" class="btn btn-outline-info btn-sm">New Order</a>
+
+    @{ 
+        <div class="row">
+            @if(Model != null)
+            {
+                foreach(var orders in Model)
+                {
+                    <p>@orders.Id</p>
+                }
+            }else
+            {
+                <p>No Orders Bro!</p>
+            }
+        </div>
+    }
 </div>
 

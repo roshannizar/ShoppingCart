@@ -52,11 +52,25 @@
             <td></td>
             <td>Grand Total</td>
             <td>
-                <button class="btn btn-primary btn-sm">Confirm Order</button>
+                <button class="btn btn-primary btn-sm" id="confirmOrder">Confirm Order</button>
             </td>
         </tr>
     </table>
 </div>
 
+<script>
+
+    //$("#confirmOrder").click(function () {
+    //    $.post("../Order/PlaceOrder",
+    //        {
+    //            CustomerId : "1",
+    //            Date: currentDate,
+    //            OrderItems: products
+    //        },
+    //        function (data, status) {
+    //            alert("Data: " + data + "\nStatus: "+status);
+    //        });
+    //});
+</script>
 <script src="~/js/add-order-items.js"></script>
 <script src="~/js/load-product.js"></script>

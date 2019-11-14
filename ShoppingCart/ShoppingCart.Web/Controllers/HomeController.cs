@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using ShoppingCart.Web.Models;
+using ShoppingCart.Web.ViewModels;
 
 namespace ShoppingCart.Web.Controllers
 {

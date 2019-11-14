@@ -2,28 +2,34 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using ShoppingCart.Core.ServiceInterface;
+using ShoppingCart.Data.Entity;
+using ShoppingCart.Web.ViewModels;
 
 namespace ShoppingCart.Web.Controllers
 {
     public class OrderController : Controller
     {
-        private readonly IOrderService orderSevrice;
+        private readonly IOrderService orderService;
+        private readonly IOrderLineService orderLineService;
         private readonly IProductService productService;
         private readonly ICustomerService customerService;
 
-        public OrderController(IOrderService orderSevrice,IProductService productService,ICustomerService customerService)
+        public OrderController(IOrderService orderService,IOrderLineService orderLineService,IProductService productService,ICustomerService customerService)
         {
-            this.orderSevrice = orderSevrice;
+            this.orderService = orderService;
+            this.orderLineService = orderLineService;
             this.productService = productService;
             this.customerService = customerService;
         }
 
         public IActionResult Index()
         {
-            return View();
+            var Orders = orderService.GetOrders();
+            return View(Orders);
         }
 
         public IActionResult OrderItems()
@@ -43,6 +49,27 @@ namespace ShoppingCart.Web.Controllers
             }).OrderBy(x => x.Text).ToList();
 
             return View();
+        }
+
+        [HttpPost]
+        public IActionResult PlaceOrder([FromBody]OrderPlacementViewModel orderPlacementViewModel)
+        {
+            try
+            {
+                var order = new Order
+                {
+                    CustomerId = orderPlacementViewModel.CustomerId,
+                    Date = orderPlacementViewModel.Date,
+                    Status = StatusType.Pending
+                };
+
+                orderService.Create(order);
+            }
+            catch(Exception)
+            {
+                throw new Exception();
+            }
+            return View("Index");
         }
     }
 }

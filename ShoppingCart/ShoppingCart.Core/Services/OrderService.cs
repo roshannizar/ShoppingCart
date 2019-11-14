@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using ShoppingCart.Core.Exceptions;
 using ShoppingCart.Core.ServiceInterface;
 using ShoppingCart.Data.Context;
 using ShoppingCart.Data.Entity;
@@ -21,9 +22,19 @@ namespace ShoppingCart.Core.Services
             return db.SaveChanges();
         }
 
-        public void Create(Order order)
+        public int Create(Order order)
         {
-            db.Add(order);
+            try
+            {
+                db.Add(order);
+                Commit();
+                return order.Id;
+            }
+            catch(OrderNotFoundException)
+            {
+                throw new OrderNotFoundException();
+            }
+
         }
 
         public Order GetOrder(int id)

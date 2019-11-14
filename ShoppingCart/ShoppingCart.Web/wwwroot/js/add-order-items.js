@@ -1,5 +1,8 @@
 ﻿var products = [];
 var grandTotal = 0;
+var d = new Date();
+var temp = JSON.stringify(d);
+var currentDate = temp.replace(/^"(.*)"$/, '$1');
 
 function CalculateTotal(quantity) {
     var quantity = document.getElementById("quantity").value;
@@ -7,7 +10,6 @@ function CalculateTotal(quantity) {
     var quantityInStock = document.getElementById("quantityInStock").innerHTML;
 
     var total = parseFloat(unitprice) * parseInt(quantity);
-    var remaining = parseInt(quantityInStock) - parseInt(quantity);
 
     if (parseInt(quantity) > parseInt(quantityInStock)) {
         document.getElementById("quantity").value = quantityInStock;
@@ -16,7 +18,6 @@ function CalculateTotal(quantity) {
         document.getElementById("totalamount").innerHTML = total;
     }
 }
-
 
 function CreateOrderLine() {
     var temp = document.getElementById("productId");
@@ -29,7 +30,8 @@ function CreateOrderLine() {
     var orderLine = {
         productId: 0,
         unitPrice: 0,
-        quantity:0
+        quantity: 0,
+        orderId:0
     }
 
     if (products) {
@@ -38,9 +40,35 @@ function CreateOrderLine() {
         orderLine.productId = parseInt(productId);
         orderLine.unitPrice = parseInt(unitPrice);
         orderLine.quantity = parseInt(quantity);
+        orderLine.orderId = 0;
+        var exist = false;
 
-        products.push(orderLine);
+        for (var i = 0; i < products.length; i++) {
 
+            var existing = products[i].productId;
+
+            if (parseInt(existing) == parseInt(productId)) {
+
+                var tempQuantity = parseInt(products[i].quantity);
+                var existingQuantity = parseInt(quantity);
+
+                var tempTotal = tempQuantity + existingQuantity;
+
+                console.log(products.push);
+                products[i].quantity = parseInt(tempTotal);
+                exist = true;
+                break;
+            }
+            
+        }
+
+        if (products.length == 0) {
+            products.push(orderLine);
+            console.log(products);
+        } else if (exist == false) {
+            products.push(orderLine);
+            console.log(products);
+        }
 
         document.getElementById("productId").value = 0;
         document.getElementById("description").innerHTML = "Description";
@@ -51,12 +79,66 @@ function CreateOrderLine() {
     }
 }
 
+function ConfirmOrder() {
+    var customerId = document.getElementById("customerId").value;
+    var date = new Date();
+    var currentDate = JSON.stringify(date);
+    var order = {
+        CustomerId: customerId,
+        Date: currentDate,
+        OrderItems: products
+    }
+
+    if (customerId != 0) {
+
+        order.CustomerId = parseInt(customerId);
+        order.Date = currentDate.replace(/^"(.*)"$/, '$1');
+        var http = new XMLHttpRequest();
+
+        //const url = '../Order/PlaceOrder';
+
+        //const request = new Request(url, {
+        //    method: 'POST',
+        //    body: JSON.stringify(order),
+        //    headers: new Headers({
+        //        'Content-Type':'application/json'
+        //    })
+        //});
+
+        //fetch(request)
+        //    .then(res => res.json())
+        //    .then(res => console.log(res));
+
+        http.open("POST", "/Order/PlaceOrder/", true);
+        http.setRequestHeader('Content-Type', 'application/json');
+        http.send(JSON.stringify(order));
+
+        http.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                console.log(http.responseText);
+                console.log("Done");
+            } else {
+                console.log("Error");
+            }
+        };
+
+    } else {
+        alert("Choose a customer");
+    }
+}
+
 function CreateTableRow(productName, description, unitPrice, quantity) {
 
     var table = document.getElementById("tableForm");
-    var editBtn = document.createElement("input");
     var deleteBtn = document.createElement("input");
+    var editBtn = document.createElement("input");
     var quantityText = document.createElement("input");
+
+    deleteBtn.setAttribute('type', 'button');
+    deleteBtn.setAttribute('value', 'Delete');
+    deleteBtn.classList.add("btn");
+    deleteBtn.classList.add("btn-sm");
+    deleteBtn.classList.add("btn-outline-danger");
 
     editBtn.setAttribute('type', 'button');
     editBtn.setAttribute('value', 'Edit');
@@ -78,6 +160,7 @@ function CreateTableRow(productName, description, unitPrice, quantity) {
     var totalCell = row.insertCell(4);
     var editBtnCell = row.insertCell(5);
 
+    editBtnCell.appendChild(deleteBtn);
     editBtnCell.appendChild(editBtn);
     quantityCell.appendChild(quantityText);
 
