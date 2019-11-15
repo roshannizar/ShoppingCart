@@ -1,4 +1,5 @@
 ﻿var products = [];
+var total = 0;
 var grandTotal = 0;
 var d = new Date();
 var temp = JSON.stringify(d);
@@ -72,10 +73,14 @@ function CreateOrderLine() {
             console.log(products);
         }
 
+        total = total + (parseInt(quantity) * parseInt(unitPrice));
+
+        document.getElementById("grandtotal").innerHTML = "Rs: "+total;
         document.getElementById("productId").value = 0;
         document.getElementById("description").innerHTML = "Description";
         document.getElementById("unitprice").innerHTML = "Rs: 50";
         document.getElementById("quantity").value = "";
+        document.getElementById("hiddenQuantity").hidden = true;
     } else {
         console.log("Product is empty!");
     }
@@ -91,13 +96,12 @@ function ConfirmOrder() {
         OrderItems: products
     }
 
-    if (customerId != 0) {
+    if (customerId != 0 && products.length != 0) {
 
         order.CustomerId = parseInt(customerId);
         order.Date = currentDate.replace(/^"(.*)"$/, '$1');
-        //var http = new XMLHttpRequest();
 
-        const url = '../Order/PlaceOrder';
+        const url = '../Order/CreateOrder';
 
         const request = new Request(url, {
             method: 'POST',
@@ -108,22 +112,11 @@ function ConfirmOrder() {
         });
 
         fetch(request)
-            .then(res => res.json())
-            .then(res => console.log(res));
+            .then(res => {
+                res.request
+            });
 
-        //http.open("POST", "/Order/PlaceOrder", true);
-        //http.setRequestHeader('Content-Type', 'application/json');
-        //http.send(JSON.stringify(order));
-
-        //http.onreadystatechange = function () {
-        //    if (this.readyState == 4 && this.status == 200) {
-        //        console.log(http.responseText);
-        //        console.log("Done");
-        //    } else {
-        //        console.log("Error");
-        //    }
-        //};
-        location.replace("/Order/Index");
+        location.replace("Index");
 
     } else {
         alert("Choose a customer");

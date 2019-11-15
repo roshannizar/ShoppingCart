@@ -82,14 +82,13 @@ namespace ShoppingCart.Core.Services
             }
         }
 
-        public Product Update(Product product)
+        public void Update(Product product)
         {
             try
             {
                 var entry = db.Entry(product);
                 entry.State = EntityState.Modified;
                 db.SaveChanges();
-                return product;
             }
             catch(ProductNotFoundException)
             {

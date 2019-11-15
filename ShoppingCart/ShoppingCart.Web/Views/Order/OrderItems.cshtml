@@ -49,17 +49,19 @@
             <td></td>
             <td></td>
             <td></td>
-            <td></td>
             <td>Grand Total</td>
             <td>
-                <button class="btn btn-primary btn-sm" id="confirmOrder" data-toggle="modal" data-target="#exampleModalCenter">Confirm Order</button>
+            <p id="grandtotal">Rs: 100</p>
+            </td>
+            <td>
+                <button class="btn btn-primary btn-sm" id="confirmOrder" data-toggle="modal" data-target="#confirmationBox">Confirm Order</button>
             </td>
         </tr>
     </table>
 </div>
 
 
-<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<div class="modal fade" id="confirmationBox" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -72,26 +74,12 @@
                 Are you sure you want to place order?
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" onclick="ConfirmOrder()">Yes</button>
+                <button type="submit" class="btn btn-primary" onclick="ConfirmOrder()">Yes</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
             </div>
         </div>
     </div>
 </div>
 
-<script>
-
-    //$("#confirmOrder").click(function () {
-    //    $.post("../Order/PlaceOrder",
-    //        {
-    //            CustomerId : "1",
-    //            Date: currentDate,
-    //            OrderItems: products
-    //        },
-    //        function (data, status) {
-    //            alert("Data: " + data + "\nStatus: "+status);
-    //        });
-    //});
-</script>
 <script src="~/js/add-order-items.js"></script>
 <script src="~/js/load-product.js"></script>

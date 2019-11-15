@@ -39,6 +39,7 @@ C:\Users\Roshan\Documents\GitHub\ShoppingCart\ShoppingCart.Web\ShoppingCart.Web\
 C:\Users\Roshan\Documents\GitHub\ShoppingCart\ShoppingCart.Web\ShoppingCart.Web\obj\Debug\netcoreapp3.0\ShoppingCart.Web.pdb
 C:\Users\Roshan\Documents\GitHub\ShoppingCart\ShoppingCart\ShoppingCart.Web\bin\Debug\netcoreapp3.0\appsettings.Development.json
 C:\Users\Roshan\Documents\GitHub\ShoppingCart\ShoppingCart\ShoppingCart.Web\bin\Debug\netcoreapp3.0\appsettings.json
+C:\Users\Roshan\Documents\GitHub\ShoppingCart\ShoppingCart\ShoppingCart.Web\bin\Debug\netcoreapp3.0\libman.json
 C:\Users\Roshan\Documents\GitHub\ShoppingCart\ShoppingCart\ShoppingCart.Web\bin\Debug\netcoreapp3.0\Properties\launchSettings.json
 C:\Users\Roshan\Documents\GitHub\ShoppingCart\ShoppingCart\ShoppingCart.Web\bin\Debug\netcoreapp3.0\ShoppingCart.Web.exe
 C:\Users\Roshan\Documents\GitHub\ShoppingCart\ShoppingCart\ShoppingCart.Web\bin\Debug\netcoreapp3.0\ShoppingCart.Web.deps.json
@@ -158,7 +159,9 @@ C:\Users\Roshan\Documents\GitHub\ShoppingCart\ShoppingCart\ShoppingCart.Web\obj\
 C:\Users\Roshan\Documents\GitHub\ShoppingCart\ShoppingCart\ShoppingCart.Web\obj\Debug\netcoreapp3.0\Razor\Views\Home\Index.cshtml.g.cs
 C:\Users\Roshan\Documents\GitHub\ShoppingCart\ShoppingCart\ShoppingCart.Web\obj\Debug\netcoreapp3.0\Razor\Views\Home\Privacy.cshtml.g.cs
 C:\Users\Roshan\Documents\GitHub\ShoppingCart\ShoppingCart\ShoppingCart.Web\obj\Debug\netcoreapp3.0\Razor\Views\Order\Index.cshtml.g.cs
+C:\Users\Roshan\Documents\GitHub\ShoppingCart\ShoppingCart\ShoppingCart.Web\obj\Debug\netcoreapp3.0\Razor\Views\Order\OrderDetail.cshtml.g.cs
 C:\Users\Roshan\Documents\GitHub\ShoppingCart\ShoppingCart\ShoppingCart.Web\obj\Debug\netcoreapp3.0\Razor\Views\Order\OrderItems.cshtml.g.cs
+C:\Users\Roshan\Documents\GitHub\ShoppingCart\ShoppingCart\ShoppingCart.Web\obj\Debug\netcoreapp3.0\Razor\Views\Order\PartialView\_List.cshtml.g.cs
 C:\Users\Roshan\Documents\GitHub\ShoppingCart\ShoppingCart\ShoppingCart.Web\obj\Debug\netcoreapp3.0\Razor\Views\Product\Index.cshtml.g.cs
 C:\Users\Roshan\Documents\GitHub\ShoppingCart\ShoppingCart\ShoppingCart.Web\obj\Debug\netcoreapp3.0\Razor\Views\Shared\Error.cshtml.g.cs
 C:\Users\Roshan\Documents\GitHub\ShoppingCart\ShoppingCart\ShoppingCart.Web\obj\Debug\netcoreapp3.0\Razor\Views\Shared\_Layout.cshtml.g.cs
@@ -171,5 +174,3 @@ C:\Users\Roshan\Documents\GitHub\ShoppingCart\ShoppingCart\ShoppingCart.Web\obj\
 C:\Users\Roshan\Documents\GitHub\ShoppingCart\ShoppingCart\ShoppingCart.Web\obj\Debug\netcoreapp3.0\ShoppingCart.Web.csproj.CopyComplete
 C:\Users\Roshan\Documents\GitHub\ShoppingCart\ShoppingCart\ShoppingCart.Web\obj\Debug\netcoreapp3.0\ShoppingCart.Web.dll
 C:\Users\Roshan\Documents\GitHub\ShoppingCart\ShoppingCart\ShoppingCart.Web\obj\Debug\netcoreapp3.0\ShoppingCart.Web.pdb
-C:\Users\Roshan\Documents\GitHub\ShoppingCart\ShoppingCart\ShoppingCart.Web\bin\Debug\netcoreapp3.0\libman.json
-C:\Users\Roshan\Documents\GitHub\ShoppingCart\ShoppingCart\ShoppingCart.Web\obj\Debug\netcoreapp3.0\Razor\Views\Order\PartialView\_List.cshtml.g.cs

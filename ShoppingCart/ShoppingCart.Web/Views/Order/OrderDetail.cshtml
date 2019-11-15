@@ -1,0 +1,13 @@
+﻿@{
+    ViewData["Title"] = "Order Detail";
+}
+
+    <div class="container-fluid">
+        <h1>Order in detail</h1>
+
+        @foreach(var items in Model)
+        {
+            <p>@items.Products.Name</p>
+        }
+    </div>
+

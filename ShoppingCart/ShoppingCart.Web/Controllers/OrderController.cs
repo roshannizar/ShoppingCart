@@ -26,6 +26,7 @@ namespace ShoppingCart.Web.Controllers
             this.customerService = customerService;
         }
 
+        [HttpGet]
         public IActionResult Index()
         {
             var Orders = orderService.GetOrders();
@@ -52,7 +53,7 @@ namespace ShoppingCart.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult PlaceOrder([FromBody]OrderPlacementViewModel orderPlacementViewModel)
+        public IActionResult CreateOrder([FromBody]OrderPlacementViewModel orderPlacementViewModel)
         {
             try
             {
@@ -63,9 +64,10 @@ namespace ShoppingCart.Web.Controllers
                     Status = StatusType.Pending
                 };
 
+                //Create Order
                 var orderId = orderService.Create(order);
 
-
+                //Create Orderline
                 for (int i= 0;i < orderPlacementViewModel.OrderItems.Count;i++)
                 {
                     var orderline = new OrderLine()
@@ -78,23 +80,44 @@ namespace ShoppingCart.Web.Controllers
 
                     orderLineService.Create(orderline);
 
-                    //var quantityInStock = productService.GetProduct(orderitems.Id).Quantity;
-                    //var remainingStock = quantityInStock - orderitems.Quantity;
+                    //Update the quantity of the given product
+
+                    //var tempProduct = productService.GetProduct(orderPlacementViewModel.OrderItems[i].ProductId);
+                    //var remainingstock = tempProduct.Quantity - orderPlacementViewModel.OrderItems[i].Quantity;
 
                     //var product = new Product
                     //{
-                    //    Id = orderitems.Id,
-                    //    Quantity = remainingStock
+                    //    Id = tempProduct.Id,
+                    //    Name = tempProduct.Name,
+                    //    Description = tempProduct.Description,
+                    //    UnitPrice = tempProduct.UnitPrice,
+                    //    Quantity = remainingstock
                     //};
 
-                    //var updatedProduct = productService.Update(product);
+                    //productService.Update(product);
                 }
             }
             catch (Exception)
             {
                 throw new Exception();
             }
+
             return View("Index");
+        }
+
+        [HttpGet]
+        public IActionResult OrderDetail(int id)
+        {
+            var model = orderLineService.GetOrderLine(id);
+
+            if(model == null)
+            {
+                return NotFound();
+            } 
+            else
+            {
+                return View(model);
+            }
         }
     }
 }
