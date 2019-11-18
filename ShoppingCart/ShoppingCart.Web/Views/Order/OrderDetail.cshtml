@@ -7,32 +7,37 @@
         <hr />
         <a class="btn btn-outline-secondary btn-sm" asp-controller="Order" asp-action="Index">Back</a>
         <a href="" class="btn btn-outline-danger btn-sm">Delete</a>
+        <button class="btn btn-primary btn-sm" hidden id="SaveChanges">Save Changes</button>
         <br /><br />
         <div class="list-group">
-            @foreach (var items in Model)
-            {
+        @foreach (var items in Model)
+        {
             <a class="list-group-item list-group-item-action align-items-start">
                 <div class="d-flex w-100 justify-content-between">
                     <p id="orderid @items.Id" hidden>@items.OrderId</p>
                     <p id="productid @items.Id" hidden>@items.ProductId</p>
+                    <p id="productName @items.Id" hidden>@items.Products.Name</p>
+                    <p id="description @items.Id" hidden>@items.Products.Description</p>
                     <p id="unitprice @items.Id" hidden>@items.UnitPrice</p>
+                    <p id="quantity @items.Id" hidden>@items.Quantity</p>
                     <h5 class="mb-1 font-weight-bold">Product Name: @items.Products.Name</h5>
                 </div>
                 <p class="mb-1">Description: @items.Products.Description</p>
-                <small id="updatedQuantity">Quantity: @items.Quantity</small>
+                <small id="updatedQuantity @items.Id">Quantity: @items.Quantity</small>
                 <br />
                 <small>Unit Price: @items.UnitPrice</small>
                 <br />
-                <span id="updateTotalAmount" class="badge badge-success">Total Amount: Rs: @(items.UnitPrice * items.Quantity)</span>
+                <span id="updateTotalAmount @items.Id" class="badge badge-success">Total Amount: Rs: @(items.UnitPrice * items.Quantity)</span>
                 @{
                     if (ViewBag.OrderStatus == 0)
                     {
-                        <input type="number" class="form-control col-md-6 right" id="quantity @items.Id" hidden value="@items.Quantity" />
-                        <input type="button" class="btn btn-warning btm-sm right" id="EditBtn @items.Id" onclick="EditOrders(@items.Id)" value="Edit">
+                        <input type="button" class="btn btn-warning btm-sm right" id="EditBtn @items.Id" data-target="#createOrderModal" data-toggle="modal" onclick="EditOrders(@items.Id)" value="Edit">
                     }
                 }
             </a>
-            }
+
+            <partial name="PartialView/_EditOrder" model="@items"/>
+        }
         </div>
     </div>
 
