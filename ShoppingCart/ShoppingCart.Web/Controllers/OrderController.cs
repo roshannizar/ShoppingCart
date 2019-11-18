@@ -83,20 +83,22 @@ namespace ShoppingCart.Web.Controllers
 
                     //Update the quantity of the given product
 
-                    //var tempProduct = productService.GetProduct(orderPlacementViewModel.OrderItems[i].ProductId);
-                    //var remainingstock = tempProduct.Quantity - orderPlacementViewModel.OrderItems[i].Quantity;
-
-                    //var product = new Product
+                    //if (ModelState.IsValid)
                     //{
-                    //    Id = tempProduct.Id,
-                    //    Name = tempProduct.Name,
-                    //    Description = tempProduct.Description,
-                    //    UnitPrice = tempProduct.UnitPrice,
-                    //    Quantity = remainingstock
-                    //};
+                    //    var tempProduct = productService.GetProduct(orderPlacementViewModel.OrderItems[i].ProductId);
+                    //    var remainingstock = tempProduct.Quantity - orderPlacementViewModel.OrderItems[i].Quantity;
 
-                    //productService.Update(product);
+                    //    var product = new Product
+                    //    {
+                    //        Id = tempProduct.Id,
+                    //        Name = tempProduct.Name,
+                    //        Description = tempProduct.Description,
+                    //        UnitPrice = tempProduct.UnitPrice,
+                    //        Quantity = remainingstock
+                    //    };
 
+                    //    productService.Update(product);
+                    //}
                     return RedirectToAction("Index");
                 }
             }
@@ -140,22 +142,31 @@ namespace ShoppingCart.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult OrderEdit(OrderItemsViewModel orderItemsViewModel)
+        public IActionResult OrderEdit([FromBody]List<OrderItemsViewModel> orderItemsViewModel)
         {
             if(ModelState.IsValid)
             {
-                var orderLine = new OrderLine
+                if (orderItemsViewModel.Count > 0)
                 {
-                    Id = orderItemsViewModel.Id,
-                    OrderId = orderItemsViewModel.OrderId,
-                    ProductId = orderItemsViewModel.ProductId,
-                    Quantity = orderItemsViewModel.Quantity,
-                    UnitPrice = orderItemsViewModel.UnitPrice
-                };
+                    for (int i = 0; i < orderItemsViewModel.Count; i++)
+                    {
+                        var orderLine = new OrderLine
+                        {
+                            Id = orderItemsViewModel[i].Id,
+                            OrderId = orderItemsViewModel[i].OrderId,
+                            ProductId = orderItemsViewModel[i].ProductId,
+                            Quantity = orderItemsViewModel[i].Quantity,
+                            UnitPrice = orderItemsViewModel[i].UnitPrice
+                        };
 
-                orderLineService.Update(orderLine);
-
-                return RedirectToAction("OrderDetails", new { id = orderItemsViewModel.OrderId });
+                        orderLineService.Update(orderLine);
+                    }
+                    return RedirectToAction("OrderDetails", new { id = orderItemsViewModel[0].OrderId });
+                }
+                else
+                {
+                    return RedirectToAction("Index");
+                }
             } 
             else
             {

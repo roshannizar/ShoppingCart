@@ -40,7 +40,26 @@ function ConfirmOrderChanges() {
     document.getElementById("updatedQuantity " + orderItems.Id).textContent = "Quantity: " + orderItems.Quantity;
     document.getElementById("updateTotalAmount " + orderItems.Id)
         .textContent = "Total Amount: Rs: " + (parseInt(document.getElementById("Quantity").value) *
-                                              parseInt(document.getElementById("UnitPrice").value));                                              
+            parseInt(document.getElementById("UnitPrice").value));
+    document.getElementById("EditBtn " + orderItems.Id).value = "Changes Made";
     TempProduct.push(orderItems);
+
     document.getElementById("SaveChanges").hidden = false;
+}
+
+function Confirm() {
+    const url = "../../Order/OrderEdit";
+
+    const request = new Request(url, {
+        method: 'POST',
+        body: JSON.stringify(TempProduct),
+        headers: new Headers({
+            'Content-Type': 'application/json'
+        })
+    });
+
+    fetch(request)
+        .then(res => {
+            res.request
+        });
 }
