@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using ShoppingCart.Core.ServiceInterface;
@@ -108,6 +109,7 @@ namespace ShoppingCart.Web.Controllers
         [HttpGet]
         public IActionResult OrderDetail(int id)
         {
+            ViewBag.OrderStatus = orderService.GetOrder(id).Status;
             var model = orderLineService.GetOrderLine(id);
 
             if(model == null)
@@ -117,6 +119,73 @@ namespace ShoppingCart.Web.Controllers
             else
             {
                 return View(model);
+            }
+        }
+
+        [HttpGet]
+        public IActionResult OrderEdit(int id)
+        {
+            var model = orderLineService.GetOrderLineById(id);
+
+            if(model == null)
+            {
+                return NotFound();
+            } 
+            else
+            {
+                return View(model);
+            }
+        }
+
+        [HttpPost]
+        public IActionResult OrderEdit(OrderItemsViewModel orderItemsViewModel)
+        {
+            if(ModelState.IsValid)
+            {
+                var orderLine = new OrderLine
+                {
+                    Id = orderItemsViewModel.Id,
+                    OrderId = orderItemsViewModel.OrderId,
+                    ProductId = orderItemsViewModel.ProductId,
+                    Quantity = orderItemsViewModel.Quantity,
+                    UnitPrice = orderItemsViewModel.UnitPrice
+                };
+
+                orderLineService.Update(orderLine);
+
+                return RedirectToAction("OrderDetails", new { id = orderItemsViewModel.OrderId });
+            } 
+            else
+            {
+                return View("OrderEdit");
+            }
+        }
+
+        [HttpPost]
+        public IActionResult OrderDelete(int id, FormCollection form)
+        {
+            try
+            {
+                orderService.Delete(id);
+                return RedirectToAction("Index");
+            }
+            catch(Exception)
+            {
+                throw new Exception();
+            }
+        }
+
+        [HttpPost]
+        public IActionResult OrderLineDelete(int id, FormCollection form)
+        {
+            try
+            {
+                orderLineService.Delete(id);
+                return RedirectToAction("Index");
+            }
+            catch(Exception)
+            {
+                throw new Exception();
             }
         }
     }

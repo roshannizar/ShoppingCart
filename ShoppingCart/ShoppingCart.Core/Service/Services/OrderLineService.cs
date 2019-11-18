@@ -70,5 +70,12 @@ namespace ShoppingCart.Core.Services
 
             return query;
         }
+
+        public void Update(OrderLine orderLine)
+        {
+            var entry = db.Entry(orderLine);
+            entry.State = EntityState.Modified;
+            Commit();
+        }
     }
 }

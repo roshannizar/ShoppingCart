@@ -36,6 +36,14 @@ namespace ShoppingCart.Core.Services
             }
         }
 
+        public void Delete(int id)
+        {
+            var order = GetOrder(id);
+
+            db.Orders.Remove(order);
+            Commit();
+        }
+
         public int GetLastOrderId()
         {
             var query = db.Orders

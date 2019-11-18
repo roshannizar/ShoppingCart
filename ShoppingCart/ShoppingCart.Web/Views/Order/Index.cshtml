@@ -4,7 +4,7 @@
 }
 
 <div class="container-fluid">
-    <h3>Order</h3>
+    <h3>Orders</h3>
     <hr />
     <a href="/Order/OrderItems" class="btn btn-outline-info btn-sm">New Order</a>
     <br /><br />
@@ -15,7 +15,7 @@
                 {
                     foreach (var orders in Model)
                     {
-                        <partial name="PartialView/_List" model="orders" />
+                        <partial name="PartialView/_OrderList" model="orders" />
                     }
                 }
                 else

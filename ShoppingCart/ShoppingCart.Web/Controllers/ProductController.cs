@@ -18,7 +18,8 @@ namespace ShoppingCart.Web.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            var Products = productService.GetProducts();
+            return View(Products);
         }
 
 

@@ -5,7 +5,8 @@
 <div class="container-fluid">
     <h5>Order Items</h5>
     <hr />
-
+    <a class="btn btn-outline-primary btn-sm" asp-controller="Order" asp-action="Index">Back</a>
+    <br /><br />
     <label>Customer Name: </label>
     <select class="badge" id="customerId" asp-items="@ViewBag.CustomerList">
         <option value="0">-- Please choose a customer --</option>
@@ -28,7 +29,7 @@
                 </select>
             </td>
             <td colspan="2">
-                <p id="description">description</p>
+                <p id="description">Description</p>
             </td>
             <td>
                 <p id="unitprice">Rs: 50</p>
@@ -41,7 +42,7 @@
                 <p id="totalamount">Rs: 100</p>
             </td>
             <td>
-                <button type="button" class="btn btn-outline-primary btn-sm" onclick="CreateOrderLine()">Add Item</button>
+                <button type="button" class="btn btn-outline-primary btn-sm" onclick="CreateOrderLine()" id="addItem" disabled>Add Item</button>
             </td>
         </tr>
         <tr>

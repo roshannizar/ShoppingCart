@@ -2,12 +2,31 @@
     ViewData["Title"] = "Order Detail";
 }
 
-    <div class="container-fluid">
-        <h1>Order in detail</h1>
-
-        @foreach(var items in Model)
+<div class="container-fluid">
+    <h3>Order in detail</h3>
+    <hr />
+    <a class="btn btn-outline-secondary btn-sm" asp-controller="Order" asp-action="Index">Back</a>
+    @{ 
+        if (ViewBag.OrderStatus == 0) 
         {
-            <p>@items.Products.Name</p>
+            <a href="" class="btn btn-outline-warning btn-sm">Edit</a>
         }
-    </div>
+    }
+    <a href="" class="btn btn-outline-danger btn-sm">Delete</a>
+    <br /><br />
+
+    @foreach (var items in Model)
+    {
+        <div class="list-group">
+            <a href="#" class="list-group-item list-group-item-action flex-column align-items-start ">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1 font-weight-bold">@items.Products.Name</h5>
+                    <span class="badge badge-success">Rs: @(items.UnitPrice * items.Quantity)</span>
+                </div>
+                <p class="mb-1">@items.Products.Description</p>
+                <small>Donec id elit non mi porta.</small>
+            </a>
+        </div>
+    }
+</div>
 
