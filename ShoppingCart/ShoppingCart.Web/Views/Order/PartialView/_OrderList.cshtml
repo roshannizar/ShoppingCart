@@ -26,7 +26,9 @@
                     <a class="btn btn-warning btn-sm" data-toggle="modal" data-target="#exampleModalCenter" asp-controller="Order" asp-action="OrderDetail" asp-route-id="@Model.Id">Edit</a>
                 }
             }
-            <button type="button" class="btn btn-danger btn-sm">Remove</button>
+            <form method="post" asp-controller="Order" asp-action="OrderDelete" asp-route-id="@Model.Id">
+                <input type="submit" class="btn btn-danger btn-sm" value="Remove"/>
+            </form>
         </div>
     </div>
 </div>

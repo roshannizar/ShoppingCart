@@ -96,6 +96,7 @@ namespace ShoppingCart.Web.Controllers
                     //};
 
                     //productService.Update(product);
+                    return RedirectToAction("Index");
                 }
             }
             catch (Exception)
@@ -110,6 +111,7 @@ namespace ShoppingCart.Web.Controllers
         public IActionResult OrderDetail(int id)
         {
             ViewBag.OrderStatus = orderService.GetOrder(id).Status;
+            ViewBag.OrderId = id;
             var model = orderLineService.GetOrderLine(id);
 
             if(model == null)
@@ -122,18 +124,17 @@ namespace ShoppingCart.Web.Controllers
             }
         }
 
-        [HttpGet]
-        public IActionResult OrderEdit(int id)
+        [HttpPost]
+        public IActionResult OrderDelete(int id)
         {
-            var model = orderLineService.GetOrderLineById(id);
-
-            if(model == null)
+            try
             {
-                return NotFound();
-            } 
-            else
+                orderService.Delete(id);
+                return RedirectToAction("Index");
+            }
+            catch(Exception)
             {
-                return View(model);
+                throw new Exception();
             }
         }
 
@@ -162,21 +163,7 @@ namespace ShoppingCart.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult OrderDelete(int id, FormCollection form)
-        {
-            try
-            {
-                orderService.Delete(id);
-                return RedirectToAction("Index");
-            }
-            catch(Exception)
-            {
-                throw new Exception();
-            }
-        }
-
-        [HttpPost]
-        public IActionResult OrderLineDelete(int id, FormCollection form)
+        public IActionResult OrderLineDelete(int id)
         {
             try
             {
