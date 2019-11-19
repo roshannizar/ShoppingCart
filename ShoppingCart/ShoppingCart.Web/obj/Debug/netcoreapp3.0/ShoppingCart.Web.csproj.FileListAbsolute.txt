@@ -175,3 +175,4 @@ C:\Users\Roshan\Documents\GitHub\ShoppingCart\ShoppingCart\ShoppingCart.Web\obj\
 C:\Users\Roshan\Documents\GitHub\ShoppingCart\ShoppingCart\ShoppingCart.Web\obj\Debug\netcoreapp3.0\Razor\Views\Order\PartialView\_OrderList.cshtml.g.cs
 C:\Users\Roshan\Documents\GitHub\ShoppingCart\ShoppingCart\ShoppingCart.Web\obj\Debug\netcoreapp3.0\Razor\Views\Product\PartialView\_ProductList.cshtml.g.cs
 C:\Users\Roshan\Documents\GitHub\ShoppingCart\ShoppingCart\ShoppingCart.Web\obj\Debug\netcoreapp3.0\Razor\Views\Order\PartialView\_EditOrder.cshtml.g.cs
+C:\Users\Roshan\Documents\GitHub\ShoppingCart\ShoppingCart\ShoppingCart.Web\obj\Debug\netcoreapp3.0\Razor\Views\Customer\PartialView\_CustomerList.cshtml.g.cs

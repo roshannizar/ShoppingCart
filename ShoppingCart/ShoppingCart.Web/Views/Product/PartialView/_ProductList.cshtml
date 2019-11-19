@@ -1,7 +1,17 @@
-﻿
-@{
-    ViewData["Title"] = "_List";
-}
+﻿@model ShoppingCart.Data.Entity.Product
 
-<h1>_List</h1>
-
+<div class="card margin border-color-strip" style="width: 18rem;">
+    <div class="card-body">
+        <label class="card-title font-weight-bold">@Model.Name</label>
+        <span class="badge badge-secondary right">Quantity: @Model.Quantity</span>
+        <hr />
+        <label class="small">Description:</label>
+        <p class="card-text">@Model.Description</p>
+        <hr />
+        <div class="btn-group" role="group" aria-label="Basic example">
+            <button type="button" class="btn btn-info btn-sm">More</button>
+            <a class="btn btn-warning btn-sm" data-toggle="modal" data-target="#exampleModalCenter" asp-route-orderLineId="@Model.Name">Edit</a>
+            <button type="button" class="btn btn-danger btn-sm">Remove</button>
+        </div>
+    </div>
+</div>

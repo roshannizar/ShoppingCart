@@ -3,5 +3,26 @@
     ViewData["Title"] = "Kraggle | Products";
 }
 
-<h1>Products</h1>
-
+    <div class="container-fluid">
+        <h3>Products</h3>
+        <hr />
+        <button class="btn btn-outline-primary btn-sm">New Product</button>
+        <br /><br />
+        <div class="container-fluid">
+            <div class="row">
+                @if (Model != null)
+                {
+                    @foreach (var products in Model)
+                    {
+                        <partial name="PartialView/_ProductList" model="products" />
+                    }
+                }
+                else
+                {
+                    <div class="alert alert-danger" role="alert">
+                        <h4 class="alert-heading">Product is empty! Add New</h4>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>

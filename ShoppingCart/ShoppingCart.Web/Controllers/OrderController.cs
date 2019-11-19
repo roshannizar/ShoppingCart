@@ -19,7 +19,8 @@ namespace ShoppingCart.Web.Controllers
         private readonly IProductService productService;
         private readonly ICustomerService customerService;
 
-        public OrderController(IOrderService orderService,IOrderLineService orderLineService,IProductService productService,ICustomerService customerService)
+        public OrderController(IOrderService orderService,IOrderLineService orderLineService,
+            IProductService productService,ICustomerService customerService)
         {
             this.orderService = orderService;
             this.orderLineService = orderLineService;
@@ -133,6 +134,7 @@ namespace ShoppingCart.Web.Controllers
             try
             {
                 orderService.Delete(id);
+                TempData["Message"] = "You have deleted the order Ref No: "+id+" successfully!";
                 return RedirectToAction("Index");
             }
             catch(Exception)
@@ -161,6 +163,7 @@ namespace ShoppingCart.Web.Controllers
 
                         orderLineService.Update(orderLine);
                     }
+                    TempData["Message"] = "Save changes made for order Ref No: " + orderItemsViewModel[0].OrderId + " successfully!";
                     return RedirectToAction("OrderDetails", new { id = orderItemsViewModel[0].OrderId });
                 }
                 else
