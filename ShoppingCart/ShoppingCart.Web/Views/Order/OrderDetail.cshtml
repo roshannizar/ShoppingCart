@@ -9,6 +9,14 @@
         <a href="" class="btn btn-outline-danger btn-sm">Delete</a>
         <button class="btn btn-primary btn-sm" hidden id="SaveChanges" onclick="Confirm()">Save Changes</button>
         <br /><br />
+        <div class="container-fluid">
+            @foreach (var order in ViewBag.Order)
+            {
+                <h4 class="badge">Order Id: @order.Id</h4>
+                <h4 class="badge">Order Customer:  @order.Customers.FirstName @order.Customers.LastName</h4>
+                <h4 class="badge badge-secondary">Order Status: @order.Status</h4>
+            }
+        </div>
         <div class="list-group">
         @foreach (var items in Model)
         {

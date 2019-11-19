@@ -8,7 +8,6 @@ namespace ShoppingCart.Core.ServiceInterface
     public interface ICustomerService
     {
         IEnumerable<Customer> GetCustomers();
-        Customer GetCustomer(int id);
         void Create(Customer customer);
         int Commit();
     }

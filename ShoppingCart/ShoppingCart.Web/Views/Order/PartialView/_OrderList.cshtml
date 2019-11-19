@@ -23,7 +23,7 @@
             <a class="btn btn-info btn-sm" asp-controller="Order" asp-action="OrderDetail" asp-route-id="@Model.Id">More</a>
             @{ if (@Model.Status == 0)
                 {
-                    <a class="btn btn-warning btn-sm" data-toggle="modal" data-target="#exampleModalCenter" asp-controller="Order" asp-action="OrderDetail" asp-route-id="@Model.Id">Edit</a>
+                    <a class="btn btn-warning btn-sm" asp-controller="Order" asp-action="OrderDetail" asp-route-id="@Model.Id">Edit</a>
                 }
             }
         <form method="post" asp-controller="Order" asp-action="OrderDelete" asp-route-id="@Model.Id">

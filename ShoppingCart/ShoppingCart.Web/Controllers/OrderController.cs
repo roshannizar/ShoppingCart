@@ -100,22 +100,20 @@ namespace ShoppingCart.Web.Controllers
 
                     //    productService.Update(product);
                     //}
-                    return RedirectToAction("Index");
                 }
+                return RedirectToAction("Index");
             }
             catch (Exception)
             {
                 throw new Exception();
             }
-
-            return View("Index");
         }
 
         [HttpGet]
         public IActionResult OrderDetail(int id)
         {
-            ViewBag.OrderStatus = orderService.GetOrder(id).Status;
-            ViewBag.OrderId = id;
+            //Loads the orders
+            ViewBag.Order = orderService.GetOrder(id);
             var model = orderLineService.GetOrderLine(id);
 
             if(model == null)
@@ -148,6 +146,7 @@ namespace ShoppingCart.Web.Controllers
         {
             if(ModelState.IsValid)
             {
+                //Checks the order item count
                 if (orderItemsViewModel.Count > 0)
                 {
                     for (int i = 0; i < orderItemsViewModel.Count; i++)
@@ -161,9 +160,11 @@ namespace ShoppingCart.Web.Controllers
                             UnitPrice = orderItemsViewModel[i].UnitPrice
                         };
 
+                        //Update order items
                         orderLineService.Update(orderLine);
                     }
-                    TempData["Message"] = "Save changes made for order Ref No: " + orderItemsViewModel[0].OrderId + " successfully!";
+                    TempData["Message"] = "Save changes made for order Ref No: " + 
+                        orderItemsViewModel[0].OrderId + " successfully!";
                     return RedirectToAction("OrderDetails", new { id = orderItemsViewModel[0].OrderId });
                 }
                 else
@@ -174,20 +175,6 @@ namespace ShoppingCart.Web.Controllers
             else
             {
                 return View("OrderEdit");
-            }
-        }
-
-        [HttpPost]
-        public IActionResult OrderLineDelete(int id)
-        {
-            try
-            {
-                orderLineService.Delete(id);
-                return RedirectToAction("Index");
-            }
-            catch(Exception)
-            {
-                throw new Exception();
             }
         }
     }

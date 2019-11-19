@@ -34,11 +34,6 @@ namespace ShoppingCart.Core.Services
             }
         }
 
-        public Customer GetCustomer(int id)
-        {
-            throw new NotImplementedException();
-        }
-
         public IEnumerable<Customer> GetCustomers()
         {
             try

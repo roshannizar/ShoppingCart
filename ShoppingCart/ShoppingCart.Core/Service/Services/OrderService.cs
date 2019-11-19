@@ -38,7 +38,7 @@ namespace ShoppingCart.Core.Services
 
         public void Delete(int id)
         {
-            var order = GetOrder(id);
+            var order = GetOrderObject(id);
 
             db.Orders.Remove(order);
             Commit();
@@ -53,10 +53,16 @@ namespace ShoppingCart.Core.Services
             return query;
         }
 
-        public Order GetOrder(int id)
+        public IEnumerable<Order> GetOrder(int id)
+        {
+            var query = db.Orders.Include(c => c.Customers).Where(o => o.Id == id).ToList();
+
+            return query;
+        }
+
+        public Order GetOrderObject(int id)
         {
             var query = db.Orders.Find(id);
-
             return query;
         }
 

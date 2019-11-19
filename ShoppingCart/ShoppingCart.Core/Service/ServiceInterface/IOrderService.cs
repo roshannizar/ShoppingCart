@@ -7,7 +7,8 @@ namespace ShoppingCart.Core.ServiceInterface
     public interface IOrderService
     {
         IEnumerable<Order> GetOrders();
-        Order GetOrder(int id);
+        IEnumerable<Order> GetOrder(int id);
+        Order GetOrderObject(int id);
         int Create(Order order);
         void Delete(int id);
         int GetLastOrderId();
