@@ -1,5 +1,29 @@
 ﻿@model ShoppingCart.Data.Entity.OrderLine
 
+    <a class="list-group-item list-group-item-action align-items-start">
+        <div class="d-flex w-100 justify-content-between">
+            <p id="orderid @Model.Id" hidden>@Model.OrderId</p>
+            <p id="productid @Model.Id" hidden>@Model.ProductId</p>
+            <p id="productName @Model.Id" hidden>@Model.Products.Name</p>
+            <p id="description @Model.Id" hidden>@Model.Products.Description</p>
+            <p id="unitprice @Model.Id" hidden>@Model.UnitPrice</p>
+            <p id="quantity @Model.Id" hidden>@Model.Quantity</p>
+            <h5 class="mb-1 font-weight-bold">Product Name: @Model.Products.Name</h5>
+        </div>
+        <p class="mb-1">Description: @Model.Products.Description</p>
+        <small id="updatedQuantity @Model.Id">Quantity: @Model.Quantity</small>
+        <br />
+        <small>Unit Price: @Model.UnitPrice</small>
+        <br />
+        <span id="updateTotalAmount @Model.Id" class="badge badge-success">Total Amount: Rs: @(Model.UnitPrice * Model.Quantity)</span>
+        @{
+            if (ViewBag.Status == 0)
+            {
+                <input type="button" class="btn btn-warning btm-sm right" id="EditBtn @Model.Id" data-target="#createOrderModal" data-toggle="modal" onclick="EditOrders(@Model.Id)" value="Edit">
+            }
+        }
+    </a>
+
 <div class="modal fade" id="createOrderModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">

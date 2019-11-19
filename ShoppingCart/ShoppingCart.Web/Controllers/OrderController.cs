@@ -81,25 +81,6 @@ namespace ShoppingCart.Web.Controllers
                     };
 
                     orderLineService.Create(orderline);
-
-                    //Update the quantity of the given product
-
-                    //if (ModelState.IsValid)
-                    //{
-                    //    var tempProduct = productService.GetProduct(orderPlacementViewModel.OrderItems[i].ProductId);
-                    //    var remainingstock = tempProduct.Quantity - orderPlacementViewModel.OrderItems[i].Quantity;
-
-                    //    var product = new Product
-                    //    {
-                    //        Id = tempProduct.Id,
-                    //        Name = tempProduct.Name,
-                    //        Description = tempProduct.Description,
-                    //        UnitPrice = tempProduct.UnitPrice,
-                    //        Quantity = remainingstock
-                    //    };
-
-                    //    productService.Update(product);
-                    //}
                 }
                 return RedirectToAction("Index");
             }
@@ -114,6 +95,7 @@ namespace ShoppingCart.Web.Controllers
         {
             //Loads the orders
             ViewBag.Order = orderService.GetOrder(id);
+            ViewBag.Status = orderService.GetOrderObject(id).Status;
             var model = orderLineService.GetOrderLine(id);
 
             if(model == null)
