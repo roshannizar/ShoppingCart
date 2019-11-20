@@ -80,6 +80,10 @@ namespace ShoppingCart.Core.Services
             {
                 throw new ProductNotFoundException();
             }
+            catch(Exception)
+            {
+                throw new Exception();
+            }
         }
 
         public void Update(Product product)
@@ -88,11 +92,15 @@ namespace ShoppingCart.Core.Services
             {
                 var entry = db.Entry(product);
                 entry.State = EntityState.Modified;
-                db.SaveChanges();
+                Commit();
             }
             catch(ProductNotFoundException)
             {
                 throw new ProductNotFoundException();
+            }
+            catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
             }
         }
     }
