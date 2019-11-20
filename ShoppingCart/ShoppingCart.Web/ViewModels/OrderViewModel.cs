@@ -8,11 +8,6 @@ namespace ShoppingCart.Web.ViewModels
 {
     public class OrderViewModel
     {
-        public OrderViewModel(int customerId,DateTime date)
-        {
-            CustomerId = customerId;
-            Date = date;
-        }
 
         public int Id { get; set; }
         public int CustomerId { get; set; }
