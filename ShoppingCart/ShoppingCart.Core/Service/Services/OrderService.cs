@@ -22,7 +22,7 @@ namespace ShoppingCart.Core.Services
             return db.SaveChanges();
         }
 
-        public int Create(Order order)
+        public int CreateOrder(Order order)
         {
             try
             {
@@ -36,7 +36,7 @@ namespace ShoppingCart.Core.Services
             }
         }
 
-        public void Delete(int id)
+        public void DeleteOrder(int id)
         {
             var order = GetOrderObject(id);
 
@@ -70,6 +70,62 @@ namespace ShoppingCart.Core.Services
         {
             var query = db.Orders.Include(c => c.Customers).ToList();
             return query;
+        }
+
+        public void CreateOrderLine(OrderLine orderLine)
+        {
+            try
+            {
+
+                db.Add(orderLine);
+                Commit();
+            }
+            catch (OrderLineNotFoundException)
+            {
+                throw new OrderLineNotFoundException();
+            }
+        }
+
+        public OrderLine DeleteOrderLine(int id)
+        {
+            var orderline = GetOrderLineById(id);
+
+            if (orderline != null)
+            {
+                db.OrderLines.Remove(orderline);
+            }
+
+            return orderline;
+        }
+
+        public IEnumerable<OrderLine> GetOrderLine(int id)
+        {
+            var query = db.OrderLines.Include(p => p.Products).Include(o => o.Orders).Where(o => o.OrderId == id).ToList();
+            return query;
+        }
+
+        public OrderLine GetOrderLineById(int id)
+        {
+            var query = db.OrderLines.Find(id);
+            return query;
+        }
+
+        public IEnumerable<OrderLine> GetOrderLines()
+        {
+            //var query = (from o in db.OrderLines
+            //             join p in db.Products on o.ProductId equals p.Id
+            //             select new {o,p});
+
+            var query = db.OrderLines.Include(p => p.Products).ToList();
+
+            return query;
+        }
+
+        public void UpdateOrderLine(OrderLine orderLine)
+        {
+            var entry = db.Entry(orderLine);
+            entry.State = EntityState.Modified;
+            Commit();
         }
     }
 }

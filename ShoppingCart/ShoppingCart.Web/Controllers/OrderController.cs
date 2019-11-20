@@ -15,15 +15,12 @@ namespace ShoppingCart.Web.Controllers
     public class OrderController : Controller
     {
         private readonly IOrderService orderService;
-        private readonly IOrderLineService orderLineService;
         private readonly IProductService productService;
         private readonly ICustomerService customerService;
 
-        public OrderController(IOrderService orderService,IOrderLineService orderLineService,
-            IProductService productService,ICustomerService customerService)
+        public OrderController(IOrderService orderService, IProductService productService,ICustomerService customerService)
         {
             this.orderService = orderService;
-            this.orderLineService = orderLineService;
             this.productService = productService;
             this.customerService = customerService;
         }
@@ -67,7 +64,7 @@ namespace ShoppingCart.Web.Controllers
                 };
 
                 //Create Order
-                var orderId = orderService.Create(order);
+                var orderId = orderService.CreateOrder(order);
 
                 //Create Orderline
                 for (int i= 0;i < orderPlacementViewModel.OrderItems.Count;i++)
@@ -81,10 +78,10 @@ namespace ShoppingCart.Web.Controllers
                     };
 
                     //Creating Order Line
-                    orderLineService.Create(orderline);
+                    orderService.CreateOrderLine(orderline);
 
                     //Update the quantity of the given product
-                    UpdateProductQuantity(orderPlacementViewModel, i);
+                    UpdateProductQuantity(orderPlacementViewModel,null,i);
                 }
 
                 return RedirectToAction("Index");
@@ -95,14 +92,27 @@ namespace ShoppingCart.Web.Controllers
             }
         }
 
-        private void UpdateProductQuantity(OrderPlacementViewModel orderPlacementViewModel, int i)
+        private void UpdateProductQuantity(OrderPlacementViewModel orderPlacementViewModel, OrderItemsViewModel orderItemsViewModel,int i)
         {
-            var tempProduct = productService.GetProduct(orderPlacementViewModel.OrderItems[i].ProductId);
-            var remainingstock = tempProduct.Quantity - orderPlacementViewModel.OrderItems[i].Quantity;
+            if (orderPlacementViewModel is null)
+            {
+                var tempProduct = productService.GetProduct(orderItemsViewModel.ProductId);
+                var remainingstock = tempProduct.Quantity - orderItemsViewModel.Quantity;
 
-            tempProduct.Quantity = remainingstock;
+                tempProduct.Quantity = remainingstock;
 
-            productService.Update(tempProduct);
+                productService.Update(tempProduct);
+            }
+            else
+            {
+                var tempProduct = productService.GetProduct(orderPlacementViewModel.OrderItems[i].ProductId);
+                var remainingstock = tempProduct.Quantity - orderPlacementViewModel.OrderItems[i].Quantity;
+
+                tempProduct.Quantity = remainingstock;
+
+                productService.Update(tempProduct);
+            }
+
         }
 
         [HttpGet]
@@ -112,7 +122,7 @@ namespace ShoppingCart.Web.Controllers
             ViewBag.Order = orderService.GetOrder(id);
             //Load the status
             ViewBag.Status = orderService.GetOrderObject(id).Status;
-            var model = orderLineService.GetOrderLine(id);
+            var model = orderService.GetOrderLine(id);
 
             if(model == null)
             {
@@ -129,7 +139,7 @@ namespace ShoppingCart.Web.Controllers
         {
             try
             {
-                orderService.Delete(id);
+                orderService.DeleteOrder(id);
                 TempData["Message"] = "You have deleted the order Ref No: "+id+" successfully!";
                 return RedirectToAction("Index");
             }
@@ -149,12 +159,13 @@ namespace ShoppingCart.Web.Controllers
                 {
                     for (int i = 0; i < orderItemsViewModel.Count; i++)
                     {
-                        var orderLineTemp = orderLineService.GetOrderLineById(orderItemsViewModel[i].Id);
+                        var orderLineTemp = orderService.GetOrderLineById(orderItemsViewModel[i].Id);
 
                         if(orderItemsViewModel[i].Quantity != orderLineTemp.Quantity)
                         {
                             orderLineTemp.Quantity = orderItemsViewModel[i].Quantity;
-                            orderLineService.Update(orderLineTemp);
+                            orderService.UpdateOrderLine(orderLineTemp);
+
                         }
                     }
                     TempData["Message"] = "Save changes made for order Ref No: " + 
