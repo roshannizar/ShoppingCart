@@ -11,10 +11,12 @@ namespace ShoppingCart.Core.Services
     public class OrderService : IOrderService
     {
         private readonly ShoppingCartDbContext db;
+        private readonly ProductService productService;
 
         public OrderService(ShoppingCartDbContext db) 
         {
             this.db = db;
+            productService = new ProductService(db);
         }
 
         public int Commit()
@@ -76,9 +78,19 @@ namespace ShoppingCart.Core.Services
         {
             try
             {
+                var tempProduct = productService.GetProduct(orderLine.ProductId);
 
-                db.Add(orderLine);
-                Commit();
+                if(orderLine.Quantity <= tempProduct.Quantity)
+                {
+                    var remainingStock = tempProduct.Quantity - orderLine.Quantity;
+                    tempProduct.Quantity = remainingStock;
+
+                    db.Add(orderLine);
+                    Commit();
+
+                    //Updating the product
+                    productService.Update(tempProduct);
+                }
             }
             catch (OrderLineNotFoundException)
             {
@@ -123,9 +135,26 @@ namespace ShoppingCart.Core.Services
 
         public void UpdateOrderLine(OrderLine orderLine)
         {
-            var entry = db.Entry(orderLine);
-            entry.State = EntityState.Modified;
-            Commit();
+            var tempProduct = productService.GetProduct(orderLine.ProductId);
+            var tempOrderLine = GetOrderLineById(orderLine.Id);
+            var tempDifference = tempOrderLine.Quantity - orderLine.Quantity;
+            var productQuantityTemp = tempDifference + tempProduct.Quantity;
+
+            if(tempDifference <= productQuantityTemp)
+            {
+                tempProduct.Quantity = productQuantityTemp;
+                tempOrderLine.Quantity = orderLine.Quantity;
+
+                var entry = db.Entry(tempProduct);
+                entry.State = EntityState.Modified;
+                Commit();
+
+                productService.Update(tempProduct);
+            }
+            else
+            {
+                throw new IneduquateProductQuantityException();
+            }
         }
     }
 }
