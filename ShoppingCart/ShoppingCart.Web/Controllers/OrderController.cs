@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -17,12 +18,14 @@ namespace ShoppingCart.Web.Controllers
         private readonly IOrderService orderService;
         private readonly IProductService productService;
         private readonly ICustomerService customerService;
+        private readonly IMapper mapper;
 
-        public OrderController(IOrderService orderService, IProductService productService,ICustomerService customerService)
+        public OrderController(IOrderService orderService, IProductService productService,ICustomerService customerService,IMapper mapper)
         {
             this.orderService = orderService;
             this.productService = productService;
             this.customerService = customerService;
+            this.mapper = mapper;
         }
 
         [HttpGet]
@@ -56,31 +59,20 @@ namespace ShoppingCart.Web.Controllers
         {
             try
             {
-                var order = new Order
-                {
-                    CustomerId = orderPlacementViewModel.CustomerId,
-                    Date = orderPlacementViewModel.Date,
-                    Status = StatusType.Pending
-                };
-
+                var order = mapper.Map<Order>(orderPlacementViewModel);
                 //Create Order
                 var orderId = orderService.CreateOrder(order);
 
                 //Create Orderline
                 for (int i= 0;i < orderPlacementViewModel.OrderItems.Count;i++)
                 {
-                    var orderline = new OrderLine()
-                    {
-                        ProductId = orderPlacementViewModel.OrderItems[i].ProductId,
-                        Quantity = orderPlacementViewModel.OrderItems[i].Quantity,
-                        UnitPrice = orderPlacementViewModel.OrderItems[i].UnitPrice,
-                        OrderId = orderId
-                    };
+                    orderPlacementViewModel.OrderItems[i].OrderId = orderId;
+                    var orderLine = mapper.Map<OrderLine>(orderPlacementViewModel.OrderItems[i]);
 
                     //Creating Order Line
-                    orderService.CreateOrderLine(orderline);
+                    orderService.CreateOrderLine(orderLine);
                 }
-
+                TempData["Message"] = orderId+" has been added successfully!";
                 return RedirectToAction("Index");
             }
             catch (Exception)
@@ -133,14 +125,7 @@ namespace ShoppingCart.Web.Controllers
                 {
                     for (int i = 0; i < orderItemsViewModel.Count; i++)
                     {
-                        var orderLine = new OrderLine
-                        {
-                            Id = orderItemsViewModel[i].Id,
-                            OrderId = orderItemsViewModel[i].OrderId,
-                            ProductId = orderItemsViewModel[i].ProductId,
-                            Quantity = orderItemsViewModel[i].Quantity,
-                            UnitPrice = orderItemsViewModel[i].UnitPrice
-                        };
+                        var orderLine = mapper.Map<OrderLine>(orderItemsViewModel[i]);
                         
                         orderService.UpdateOrderLine(orderLine);
                     }

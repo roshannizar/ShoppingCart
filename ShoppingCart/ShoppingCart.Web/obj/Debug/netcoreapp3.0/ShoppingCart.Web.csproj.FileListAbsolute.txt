@@ -147,7 +147,6 @@ C:\Users\Roshan\Documents\GitHub\ShoppingCart\ShoppingCart\ShoppingCart.Web\bin\
 C:\Users\Roshan\Documents\GitHub\ShoppingCart\ShoppingCart\ShoppingCart.Web\obj\Debug\netcoreapp3.0\ShoppingCart.Web.csprojAssemblyReference.cache
 C:\Users\Roshan\Documents\GitHub\ShoppingCart\ShoppingCart\ShoppingCart.Web\obj\Debug\netcoreapp3.0\staticwebassets\ShoppingCart.Web.StaticWebAssets.Manifest.cache
 C:\Users\Roshan\Documents\GitHub\ShoppingCart\ShoppingCart\ShoppingCart.Web\obj\Debug\netcoreapp3.0\staticwebassets\ShoppingCart.Web.StaticWebAssets.xml
-C:\Users\Roshan\Documents\GitHub\ShoppingCart\ShoppingCart\ShoppingCart.Web\obj\Debug\netcoreapp3.0\ShoppingCart.Web.MvcApplicationPartsAssemblyInfo.cache
 C:\Users\Roshan\Documents\GitHub\ShoppingCart\ShoppingCart\ShoppingCart.Web\obj\Debug\netcoreapp3.0\ShoppingCart.Web.RazorAssemblyInfo.cache
 C:\Users\Roshan\Documents\GitHub\ShoppingCart\ShoppingCart\ShoppingCart.Web\obj\Debug\netcoreapp3.0\ShoppingCart.Web.RazorAssemblyInfo.cs
 C:\Users\Roshan\Documents\GitHub\ShoppingCart\ShoppingCart\ShoppingCart.Web\obj\Debug\netcoreapp3.0\ShoppingCart.Web.AssemblyInfoInputs.cache
@@ -177,3 +176,6 @@ C:\Users\Roshan\Documents\GitHub\ShoppingCart\ShoppingCart\ShoppingCart.Web\obj\
 C:\Users\Roshan\Documents\GitHub\ShoppingCart\ShoppingCart\ShoppingCart.Web\obj\Debug\netcoreapp3.0\Razor\Views\Order\PartialView\_EditOrder.cshtml.g.cs
 C:\Users\Roshan\Documents\GitHub\ShoppingCart\ShoppingCart\ShoppingCart.Web\obj\Debug\netcoreapp3.0\Razor\Views\Customer\PartialView\_CustomerList.cshtml.g.cs
 C:\Users\Roshan\Documents\GitHub\ShoppingCart\ShoppingCart\ShoppingCart.Web\obj\Debug\netcoreapp3.0\Razor\Views\Order\PartialView\_OrderDetailCollapse.cshtml.g.cs
+C:\Users\Roshan\Documents\GitHub\ShoppingCart\ShoppingCart\ShoppingCart.Web\bin\Debug\netcoreapp3.0\AutoMapper.dll
+C:\Users\Roshan\Documents\GitHub\ShoppingCart\ShoppingCart\ShoppingCart.Web\bin\Debug\netcoreapp3.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
+C:\Users\Roshan\Documents\GitHub\ShoppingCart\ShoppingCart\ShoppingCart.Web\obj\Debug\netcoreapp3.0\ShoppingCart.Web.MvcApplicationPartsAssemblyInfo.cache
