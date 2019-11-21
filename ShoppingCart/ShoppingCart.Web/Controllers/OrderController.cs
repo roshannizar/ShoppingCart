@@ -79,9 +79,9 @@ namespace ShoppingCart.Web.Controllers
             try
             {
                 //Loads the orders
-                ViewBag.Order = orderService.GetOrder(id);
+                ViewBag.Order = orderService.GetOrderById(id);
                 //Load the status
-                ViewBag.Status = orderService.GetOrderObject(id).Status;
+                ViewBag.Status = orderService.GetSingleOrderById(id).Status;
                 var model = orderService.GetOrderLine(id);
 
                 if (model == null)
