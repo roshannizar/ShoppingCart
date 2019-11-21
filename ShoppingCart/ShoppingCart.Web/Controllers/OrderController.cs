@@ -130,30 +130,23 @@ namespace ShoppingCart.Web.Controllers
         {
             try
             {
-                if (ModelState.IsValid)
-                {
-                    //Checks the order item count
-                    if (orderItemsViewModel.Count > 0)
-                    {
-                        for (int i = 0; i < orderItemsViewModel.Count; i++)
-                        {
-                            var orderLine = mapper.Map<OrderLine>(orderItemsViewModel[i]);
+                if (!ModelState.IsValid)                                   
+                   return View("OrderEdit");                   
 
-                            orderService.UpdateOrderLine(orderLine);
-                        }
-                        TempData["Message"] = "Save changes made for order Ref No: " +
-                            orderItemsViewModel[0].OrderId + " successfully!";
-                        return RedirectToAction("Index");
-                    }
-                    else
-                    {
-                        return RedirectToAction("Index");
-                    }
-                }
-                else
+                //Checks the order item count
+                if (!(orderItemsViewModel.Count > 0))
+                    return RedirectToAction("Index");
+                
+                for (int i = 0; i < orderItemsViewModel.Count; i++)
                 {
-                    return View("OrderEdit");
+                    var orderLine = mapper.Map<OrderLine>(orderItemsViewModel[i]);
+
+                    orderService.UpdateOrderLine(orderLine);
                 }
+                TempData["Message"] = "Save changes made for order Ref No: " +
+                    orderItemsViewModel[0].OrderId + " successfully!";
+                return RedirectToAction("Index");
+
             }
             catch(Exception ex)
             {
