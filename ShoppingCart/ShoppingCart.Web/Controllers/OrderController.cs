@@ -132,7 +132,7 @@ namespace ShoppingCart.Web.Controllers
                 {
                     var orderLine = mapper.Map<OrderLine>(orderItemsViewModel[i]);
 
-                    orderService.UpdateOrderLine(orderLine);
+                    orderService.UpdateOrder(orderLine);
                 }
                 TempData["Message"] = "Save changes made for order Ref No: " +
                     orderItemsViewModel[0].OrderId + " successfully!";

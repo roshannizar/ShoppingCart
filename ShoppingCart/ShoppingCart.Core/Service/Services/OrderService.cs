@@ -51,6 +51,14 @@ namespace ShoppingCart.Core.Services
             {
                 throw new OrderNotFoundException();
             }
+            catch(OrderLineNotFoundException)
+            {
+                throw new OrderLineNotFoundException();
+            }
+            catch (Exception)
+            {
+                throw new Exception();
+            }
         }
 
         public void DeleteOrder(int id)
@@ -139,16 +147,11 @@ namespace ShoppingCart.Core.Services
 
         public IEnumerable<OrderLine> GetOrderLines()
         {
-            //var query = (from o in db.OrderLines
-            //             join p in db.Products on o.ProductId equals p.Id
-            //             select new {o,p});
-
             var query = db.OrderLines.Include(p => p.Products).ToList();
-
             return query;
         }
 
-        public void UpdateOrderLine(OrderLine orderLine)
+        public void UpdateOrder(OrderLine orderLine)
         {
             var tempProduct = productService.GetProduct(orderLine.ProductId);
             var tempOrderLine = GetOrderLineById(orderLine.Id);
