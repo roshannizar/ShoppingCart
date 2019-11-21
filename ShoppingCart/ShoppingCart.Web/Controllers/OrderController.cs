@@ -75,8 +75,9 @@ namespace ShoppingCart.Web.Controllers
                 TempData["Message"] = orderId+" has been added successfully!";
                 return RedirectToAction("Index");
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                TempData["Message"] = "Error Occured while creating an Order! "+ex;
                 throw new Exception();
             }
         }
@@ -84,19 +85,27 @@ namespace ShoppingCart.Web.Controllers
         [HttpGet]
         public IActionResult OrderDetail(int id)
         {
-            //Loads the orders
-            ViewBag.Order = orderService.GetOrder(id);
-            //Load the status
-            ViewBag.Status = orderService.GetOrderObject(id).Status;
-            var model = orderService.GetOrderLine(id);
+            try
+            {
+                //Loads the orders
+                ViewBag.Order = orderService.GetOrder(id);
+                //Load the status
+                ViewBag.Status = orderService.GetOrderObject(id).Status;
+                var model = orderService.GetOrderLine(id);
 
-            if(model == null)
+                if (model == null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    return View(model);
+                }
+            }
+            catch(Exception ex)
             {
-                return NotFound();
-            } 
-            else
-            {
-                return View(model);
+                TempData["Message"] = "No Order found! "+ex;
+                throw new Exception();
             }
         }
 
@@ -109,8 +118,9 @@ namespace ShoppingCart.Web.Controllers
                 TempData["Message"] = "You have deleted the order Ref No: "+id+" successfully!";
                 return RedirectToAction("Index");
             }
-            catch(Exception)
+            catch(Exception ex)
             {
+                TempData["Message"] = "Error occured while deleting the order "+id+"! "+ex;
                 throw new Exception();
             }
         }
@@ -118,29 +128,37 @@ namespace ShoppingCart.Web.Controllers
         [HttpPost]
         public IActionResult OrderEdit([FromBody]List<OrderItemsViewModel> orderItemsViewModel)
         {
-            if(ModelState.IsValid)
+            try
             {
-                //Checks the order item count
-                if (orderItemsViewModel.Count > 0)
+                if (ModelState.IsValid)
                 {
-                    for (int i = 0; i < orderItemsViewModel.Count; i++)
+                    //Checks the order item count
+                    if (orderItemsViewModel.Count > 0)
                     {
-                        var orderLine = mapper.Map<OrderLine>(orderItemsViewModel[i]);
-                        
-                        orderService.UpdateOrderLine(orderLine);
+                        for (int i = 0; i < orderItemsViewModel.Count; i++)
+                        {
+                            var orderLine = mapper.Map<OrderLine>(orderItemsViewModel[i]);
+
+                            orderService.UpdateOrderLine(orderLine);
+                        }
+                        TempData["Message"] = "Save changes made for order Ref No: " +
+                            orderItemsViewModel[0].OrderId + " successfully!";
+                        return RedirectToAction("Index");
                     }
-                    TempData["Message"] = "Save changes made for order Ref No: " + 
-                        orderItemsViewModel[0].OrderId + " successfully!";
-                    return RedirectToAction("Index");
+                    else
+                    {
+                        return RedirectToAction("Index");
+                    }
                 }
                 else
                 {
-                    return RedirectToAction("Index");
+                    return View("OrderEdit");
                 }
-            } 
-            else
+            }
+            catch(Exception ex)
             {
-                return View("OrderEdit");
+                TempData["Message"] = "Error occured while updating the order! "+ex;
+                throw new Exception();
             }
         }
     }

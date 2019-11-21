@@ -37,7 +37,6 @@ function CreateOrderLine() {
     }
 
     if (products) {
-
         CreateTableRow(productName, description, unitPrice, quantity);
         orderLine.productId = parseInt(productId);
         orderLine.unitPrice = parseInt(unitPrice);

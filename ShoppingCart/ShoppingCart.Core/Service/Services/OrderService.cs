@@ -40,10 +40,34 @@ namespace ShoppingCart.Core.Services
 
         public void DeleteOrder(int id)
         {
-            var order = GetOrderObject(id);
+            try
+            {
+                var order = GetOrderObject(id);
 
-            db.Orders.Remove(order);
-            Commit();
+                if(order.Status == StatusType.Confirmed)
+                {
+                    db.Orders.Remove(order);
+                } 
+                else
+                {
+                    var orderLineTemp = GetOrderLine(id);
+
+                    foreach(var temp in orderLineTemp)
+                    {
+                        var tempProduct = productService.GetProduct(temp.ProductId);
+                        var tempQuantity = tempProduct.Quantity + temp.Quantity;
+                        tempProduct.Quantity = tempQuantity;
+                        productService.Update(tempProduct);
+                    }
+
+                    db.Orders.Remove(order);
+                }
+                Commit();
+            }
+            catch(OrderNotFoundException)
+            {
+                throw new OrderNotFoundException();
+            }
         }
 
         public int GetLastOrderId()
@@ -70,7 +94,7 @@ namespace ShoppingCart.Core.Services
 
         public IEnumerable<Order> GetOrders()
         {
-            var query = db.Orders.Include(c => c.Customers).ToList();
+            var query = db.Orders.Include(c => c.Customers).Include(ol => ol.OrderLines).ToList();
             return query;
         }
 
