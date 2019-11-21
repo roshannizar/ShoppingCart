@@ -14,6 +14,7 @@ namespace ShoppingCart.Web.AutoMapper
         {
             CreateMap<Order, OrderPlacementViewModel>().ReverseMap();
             CreateMap<OrderLine,OrderItemsViewModel>().ReverseMap();
+            CreateMap<OrderPlacementViewModel, OrderItemsViewModel>().ReverseMap();
         }
         
     }

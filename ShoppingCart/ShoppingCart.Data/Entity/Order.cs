@@ -9,7 +9,7 @@ namespace ShoppingCart.Data.Entity
     public class Order
     {
         public int Id { get; set; }
-        public virtual List<OrderLine> OrderLines { get; set; }
+        public virtual List<OrderLine> OrderItems { get; set; }
         public int CustomerId { get; set; }
         [ForeignKey("CustomerId")]
         public virtual Customer Customers { get; set; }

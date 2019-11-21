@@ -14,8 +14,7 @@ namespace ShoppingCart.Core.ServiceInterface
         OrderLine GetOrderLineById(int id);
 
         int GetLastOrderId();
-        int CreateOrder(Order order);
-        void CreateOrderLine(OrderLine orderLine);
+        void CreateOrder(Order order);
         void UpdateOrderLine(OrderLine orderLine);
         OrderLine DeleteOrderLine(int id);
         void DeleteOrder(int id);

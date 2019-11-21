@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using ShoppingCart.Core.Exceptions;
@@ -24,13 +25,27 @@ namespace ShoppingCart.Core.Services
             return db.SaveChanges();
         }
 
-        public int CreateOrder(Order order)
+        public void CreateOrder(Order order)
         {
             try
             {
-                db.Add(order);
+                db.Orders.Add(order);
                 Commit();
-                return order.Id;
+
+                foreach (var items in order.OrderItems)
+                {
+
+                    var tempProduct = productService.GetProduct(items.ProductId);
+
+                    if (items.Quantity <= tempProduct.Quantity)
+                    {
+                        var remainingStock = tempProduct.Quantity - items.Quantity;
+                        tempProduct.Quantity = remainingStock;
+
+                        //Updating the product
+                        productService.Update(tempProduct);
+                    }
+                }
             }
             catch(OrderNotFoundException)
             {
@@ -94,32 +109,8 @@ namespace ShoppingCart.Core.Services
 
         public IEnumerable<Order> GetOrders()
         {
-            var query = db.Orders.Include(c => c.Customers).Include(ol => ol.OrderLines).ToList();
+            var query = db.Orders.Include(c => c.Customers).Include(ol => ol.OrderItems).ToList();
             return query;
-        }
-
-        public void CreateOrderLine(OrderLine orderLine)
-        {
-            try
-            {
-                var tempProduct = productService.GetProduct(orderLine.ProductId);
-
-                if(orderLine.Quantity <= tempProduct.Quantity)
-                {
-                    var remainingStock = tempProduct.Quantity - orderLine.Quantity;
-                    tempProduct.Quantity = remainingStock;
-
-                    db.Add(orderLine);
-                    Commit();
-
-                    //Updating the product
-                    productService.Update(tempProduct);
-                }
-            }
-            catch (OrderLineNotFoundException)
-            {
-                throw new OrderLineNotFoundException();
-            }
         }
 
         public OrderLine DeleteOrderLine(int id)

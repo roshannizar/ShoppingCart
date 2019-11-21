@@ -60,19 +60,10 @@ namespace ShoppingCart.Web.Controllers
             try
             {
                 var order = mapper.Map<Order>(orderPlacementViewModel);
-                //Create Order
-                var orderId = orderService.CreateOrder(order);
-
-                //Create Orderline
-                for (int i= 0;i < orderPlacementViewModel.OrderItems.Count;i++)
-                {
-                    orderPlacementViewModel.OrderItems[i].OrderId = orderId;
-                    var orderLine = mapper.Map<OrderLine>(orderPlacementViewModel.OrderItems[i]);
-
-                    //Creating Order Line
-                    orderService.CreateOrderLine(orderLine);
-                }
-                TempData["Message"] = orderId+" has been added successfully!";
+               //Create Order
+                orderService.CreateOrder(order);
+               
+                TempData["Message"] = "Order has been added successfully!";
                 return RedirectToAction("Index");
             }
             catch (Exception ex)
