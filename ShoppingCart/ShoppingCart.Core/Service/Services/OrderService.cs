@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using ShoppingCart.Core.Exceptions;
 using ShoppingCart.Core.ServiceInterface;
 using ShoppingCart.Data.Context;
-using ShoppingCart.Data.Entity;
+using ShoppingCart.Data.Models;
 
 namespace ShoppingCart.Core.Services
 {
@@ -20,18 +20,13 @@ namespace ShoppingCart.Core.Services
             productService = new ProductService(db);
         }
 
-        public int Commit()
-        {
-            return db.SaveChanges();
-        }
-
         public void CreateOrder(Order order)
         {
             try
             {
                 //This method will add orderlines as well, since this entity has the orderline list
                 db.Orders.Add(order);
-                Commit();
+                db.SaveChanges();
 
                 foreach (var items in order.OrderItems)
                 {
@@ -66,6 +61,45 @@ namespace ShoppingCart.Core.Services
             }
         }
 
+        public void UpdateOrder(OrderLine orderLine)
+        {
+            try
+            {
+                var tempProduct = productService.GetProduct(orderLine.ProductId);
+                var tempOrderLine = GetOrderLineById(orderLine.Id);
+
+                var tempDifference = tempOrderLine.Quantity - orderLine.Quantity;
+                var productQuantityTemp = tempDifference + tempProduct.Quantity;
+
+                if (tempDifference <= productQuantityTemp)
+                {
+                    tempProduct.Quantity = productQuantityTemp;
+                    tempOrderLine.Quantity = orderLine.Quantity;
+
+                    if (tempOrderLine.Quantity == 0)
+                    {
+                        DeleteOrderLine(tempOrderLine);
+                    }
+                    else
+                    {
+                        var entry = db.Entry(tempOrderLine);
+                        entry.State = EntityState.Modified;
+                        db.SaveChanges();
+                    }
+
+                    productService.Update(tempProduct);
+                }
+                else
+                {
+                    throw new IneduquateProductQuantityException();
+                }
+            }
+            catch (Exception)
+            {
+                throw new Exception();
+            }
+        }
+
         public void DeleteOrder(int id)
         {
             try
@@ -78,7 +112,7 @@ namespace ShoppingCart.Core.Services
                 } 
                 else
                 {
-                    var orderLineTemp = GetOrderLine(id);
+                    var orderLineTemp = GetOrderLineByOrderId(id);
 
                     foreach(var temp in orderLineTemp)
                     {
@@ -90,12 +124,27 @@ namespace ShoppingCart.Core.Services
 
                     db.Orders.Remove(order);
                 }
-                Commit();
+                db.SaveChanges();
             }
             catch(OrderNotFoundException)
             {
                 throw new OrderNotFoundException();
             }
+        }
+
+        public void DeleteOrderLine(OrderLine orderLine)
+        {
+            if (orderLine != null)
+            {
+                db.OrderLines.Remove(orderLine);
+                db.SaveChanges();
+            }
+        }
+
+        public IEnumerable<Order> GetOrders()
+        {
+            var query = db.Orders.Include(c => c.Customers).Include(ol => ol.OrderItems).ToList();
+            return query;
         }
 
         public IEnumerable<Order> GetOrderById(int id)
@@ -105,62 +154,22 @@ namespace ShoppingCart.Core.Services
             return query;
         }
 
+        public IEnumerable<OrderLine> GetOrderLineByOrderId(int id)
+        {
+            var query = db.OrderLines.Include(p => p.Products).Include(o => o.Orders).Where(o => o.OrderId == id).ToList();
+            return query;
+        }
+
         public Order GetSingleOrderById(int id)
         {
             var query = db.Orders.Find(id);
             return query;
         }
 
-        public IEnumerable<Order> GetOrders()
-        {
-            var query = db.Orders.Include(c => c.Customers).Include(ol => ol.OrderItems).ToList();
-            return query;
-        }
-
-        public void DeleteOrderLine(int id)
-        {
-            var orderline = GetSingleOrderLineById(id);
-
-            if (orderline != null)
-            {
-                db.OrderLines.Remove(orderline);
-            }
-        }
-
-        public IEnumerable<OrderLine> GetOrderLine(int id)
-        {
-            var query = db.OrderLines.Include(p => p.Products).Include(o => o.Orders).Where(o => o.OrderId == id).ToList();
-            return query;
-        }
-
-        public OrderLine GetSingleOrderLineById(int id)
+        public OrderLine GetOrderLineById(int id)
         {
             var query = db.OrderLines.Find(id);
             return query;
-        }
-
-        public void UpdateOrder(OrderLine orderLine)
-        {
-            var tempProduct = productService.GetProduct(orderLine.ProductId);
-            var tempOrderLine = GetSingleOrderLineById(orderLine.Id);
-            var tempDifference = tempOrderLine.Quantity - orderLine.Quantity;
-            var productQuantityTemp = tempDifference + tempProduct.Quantity;
-
-            if(tempDifference <= productQuantityTemp)
-            {
-                tempProduct.Quantity = productQuantityTemp;
-                tempOrderLine.Quantity = orderLine.Quantity;
-
-                var entry = db.Entry(tempProduct);
-                entry.State = EntityState.Modified;
-                Commit();
-
-                productService.Update(tempProduct);
-            }
-            else
-            {
-                throw new IneduquateProductQuantityException();
-            }
         }
     }
 }

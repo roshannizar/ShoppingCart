@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
-namespace ShoppingCart.Data.Entity
+namespace ShoppingCart.Data.Models
 {
     public class Customer
     {

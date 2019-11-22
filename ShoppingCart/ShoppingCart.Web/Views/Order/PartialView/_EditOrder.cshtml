@@ -1,4 +1,4 @@
-﻿@model ShoppingCart.Data.Entity.OrderLine
+﻿@model ShoppingCart.Data.Models.OrderLine
 
     <a class="list-group-item list-group-item-action align-items-start">
         <div class="d-flex w-100 justify-content-between">
@@ -19,7 +19,7 @@
         @{
             if (ViewBag.Status == 0)
             {
-                <input type="button" class="btn btn-danger btm-sm right" id="DeleteBtn @Model.Id" data-target="#createOrderModal" data-toggle="modal" onclick="EditOrders(@Model.Id)" value="Delete">
+                <input type="button" class="btn btn-danger btm-sm right margin-left" id="DeleteBtn @Model.Id" onclick="DeleteOrderItem(@Model.Id)" value="Delete">
                 <input type="button" class="btn btn-warning btm-sm right" id="EditBtn @Model.Id" data-target="#createOrderModal" data-toggle="modal" onclick="EditOrders(@Model.Id)" value="Edit">
             }
         }

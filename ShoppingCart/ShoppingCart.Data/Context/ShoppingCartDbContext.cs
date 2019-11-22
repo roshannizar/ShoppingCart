@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using ShoppingCart.Data.Entity;
+using ShoppingCart.Data.Models;
 
 namespace ShoppingCart.Data.Context
 {

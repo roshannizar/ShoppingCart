@@ -1,7 +1,7 @@
 ﻿using ShoppingCart.Core.Exceptions;
 using ShoppingCart.Core.ServiceInterface;
 using ShoppingCart.Data.Context;
-using ShoppingCart.Data.Entity;
+using ShoppingCart.Data.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;

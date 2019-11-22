@@ -7,8 +7,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using ShoppingCart.Core.BusinessObjectModels;
 using ShoppingCart.Core.ServiceInterface;
-using ShoppingCart.Data.Entity;
+using ShoppingCart.Data.Models;
 using ShoppingCart.Web.ViewModels;
 
 namespace ShoppingCart.Web.Controllers
@@ -20,7 +21,8 @@ namespace ShoppingCart.Web.Controllers
         private readonly ICustomerService customerService;
         private readonly IMapper mapper;
 
-        public OrderController(IOrderService orderService, IProductService productService,ICustomerService customerService,IMapper mapper)
+        public OrderController(IOrderService orderService, IProductService productService,
+            ICustomerService customerService,IMapper mapper)
         {
             this.orderService = orderService;
             this.productService = productService;
@@ -82,16 +84,21 @@ namespace ShoppingCart.Web.Controllers
                 ViewBag.Order = orderService.GetOrderById(id);
                 //Load the status
                 ViewBag.Status = orderService.GetSingleOrderById(id).Status;
-                var model = orderService.GetOrderLine(id);
 
-                if (model == null)
+                if (ViewBag.Status != null)
                 {
-                    return NotFound();
+                    var model = orderService.GetOrderLineByOrderId(id);
+
+                    if (model == null)
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        return View(model);
+                    }
                 }
-                else
-                {
-                    return View(model);
-                }
+                return NotFound();
             }
             catch(Exception ex)
             {

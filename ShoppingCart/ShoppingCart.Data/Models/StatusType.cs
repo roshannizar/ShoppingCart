@@ -1,4 +1,4 @@
-﻿namespace ShoppingCart.Data.Entity
+﻿namespace ShoppingCart.Data.Models
 {
     public enum StatusType
     {

@@ -4,7 +4,7 @@ using System.Text;
 using System.Linq;
 using ShoppingCart.Data.Context;
 using ShoppingCart.Core.ServiceInterface;
-using ShoppingCart.Data.Entity;
+using ShoppingCart.Data.Models;
 using ShoppingCart.Core.Exceptions;
 using Microsoft.EntityFrameworkCore;
 

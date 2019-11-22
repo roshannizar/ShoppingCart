@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
-namespace ShoppingCart.Data.Entity
+namespace ShoppingCart.Data.Models
 {
     public class OrderLine
     {

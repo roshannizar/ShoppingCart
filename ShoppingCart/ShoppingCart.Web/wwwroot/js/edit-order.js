@@ -22,6 +22,37 @@ function EditOrders(id) {
     }
 }
 
+function DeleteOrderItem(id) {
+    var orderId = document.getElementById("orderid " + id).innerHTML;
+    var productId = document.getElementById("productid " + id).innerHTML;
+    var unitPrice = document.getElementById("unitprice " + id).innerHTML;
+    var deleteBtn = document.getElementById("DeleteBtn " + id);
+
+    var orderItems = {
+        Id: 0,
+        ProductId: 0,
+        UnitPrice: 0,
+        Quantity: 0,
+        OrderId: 0
+    };
+
+    if (deleteBtn.value === "Delete") {
+        orderItems.Id = id;
+        orderItems.ProductId = parseInt(productId);
+        orderItems.OrderId = parseInt(orderId);
+        orderItems.Quantity = 0;
+        orderItems.UnitPrice = parseInt(unitPrice);
+        TempProduct.push(orderItems);
+        deleteBtn.value = "Undo Delete";
+        document.getElementById("SaveChanges").hidden = false;
+        document.getElementById("EditBtn " + id).hidden = true;
+    } else {
+        deleteBtn.value = "Delete";
+
+
+    }
+}
+
 function ConfirmOrderChanges() {
 
     var orderItems = {
@@ -41,7 +72,8 @@ function ConfirmOrderChanges() {
     document.getElementById("updateTotalAmount " + orderItems.Id)
         .textContent = "Total Amount: Rs: " + (parseInt(document.getElementById("Quantity").value) *
             parseInt(document.getElementById("UnitPrice").value));
-    document.getElementById("EditBtn " + orderItems.Id).value = "Changes Made";
+    document.getElementById("EditBtn " + orderItems.Id).value = "Undo Edit";
+
     TempProduct.push(orderItems);
 
     document.getElementById("SaveChanges").hidden = false;

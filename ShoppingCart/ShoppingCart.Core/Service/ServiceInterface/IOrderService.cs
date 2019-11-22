@@ -1,4 +1,4 @@
-﻿using ShoppingCart.Data.Entity;
+﻿using ShoppingCart.Data.Models;
 using System.Collections.Generic;
 using System.Text;
 
@@ -8,13 +8,12 @@ namespace ShoppingCart.Core.ServiceInterface
     {
         IEnumerable<Order> GetOrders();
         IEnumerable<Order> GetOrderById(int id);
-        IEnumerable<OrderLine> GetOrderLine(int id);
+        IEnumerable<OrderLine> GetOrderLineByOrderId(int id);
         Order GetSingleOrderById(int id);
-        OrderLine GetSingleOrderLineById(int id);
+        OrderLine GetOrderLineById(int id);
         void CreateOrder(Order order);
         void UpdateOrder(OrderLine orderLine);
-        void DeleteOrderLine(int id);
+        void DeleteOrderLine(OrderLine orderLine);
         void DeleteOrder(int id);
-        int Commit();
     }
 }

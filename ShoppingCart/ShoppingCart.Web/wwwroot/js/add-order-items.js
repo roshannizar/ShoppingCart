@@ -56,7 +56,6 @@ function CreateOrderLine() {
 
                 var tempTotal = tempQuantity + existingQuantity;
 
-                console.log(products.push);
                 products[i].quantity = parseInt(tempTotal);
                 exist = true;
                 break;
