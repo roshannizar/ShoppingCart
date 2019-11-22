@@ -24,6 +24,7 @@
     ".NETCoreApp,Version=v3.0": {
       "ShoppingCart.Web/1.0.0": {
         "dependencies": {
+          "AutoMapper": "9.0.0",
           "AutoMapper.Extensions.Microsoft.DependencyInjection": "7.0.0",
           "Microsoft.EntityFrameworkCore.Design": "3.0.0",
           "Microsoft.EntityFrameworkCore.Tools": "3.0.0",

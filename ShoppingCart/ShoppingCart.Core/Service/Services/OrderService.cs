@@ -24,6 +24,7 @@ namespace ShoppingCart.Core.Services
         {
             try
             {
+                
                 //This method will add orderlines as well, since this entity has the orderline list
                 db.Orders.Add(order);
                 db.SaveChanges();
@@ -61,37 +62,40 @@ namespace ShoppingCart.Core.Services
             }
         }
 
-        public void UpdateOrder(OrderLine orderLine)
+        public void UpdateOrder(Order order)
         {
             try
             {
-                var tempProduct = productService.GetProduct(orderLine.ProductId);
-                var tempOrderLine = GetOrderLineById(orderLine.Id);
-
-                var tempDifference = tempOrderLine.Quantity - orderLine.Quantity;
-                var productQuantityTemp = tempDifference + tempProduct.Quantity;
-
-                if (tempDifference <= productQuantityTemp)
+                foreach (var items in order.OrderItems)
                 {
-                    tempProduct.Quantity = productQuantityTemp;
-                    tempOrderLine.Quantity = orderLine.Quantity;
+                    var tempProduct = productService.GetProduct(items.ProductId);
+                    var tempOrderLine = GetOrderLineById(items.Id);
 
-                    if (tempOrderLine.Quantity == 0)
+                    var tempDifference = tempOrderLine.Quantity - items.Quantity;
+                    var productQuantityTemp = tempDifference + tempProduct.Quantity;
+
+                    if (tempDifference <= productQuantityTemp)
                     {
-                        DeleteOrderLine(tempOrderLine);
+                        tempProduct.Quantity = productQuantityTemp;
+                        tempOrderLine.Quantity = items.Quantity;
+
+                        if (tempOrderLine.Quantity == 0)
+                        {
+                            DeleteOrderLine(tempOrderLine);
+                        }
+                        else
+                        {
+                            var entry = db.Entry(tempOrderLine);
+                            entry.State = EntityState.Modified;
+                            db.SaveChanges();
+                        }
+
+                        productService.Update(tempProduct);
                     }
                     else
                     {
-                        var entry = db.Entry(tempOrderLine);
-                        entry.State = EntityState.Modified;
-                        db.SaveChanges();
+                        throw new IneduquateProductQuantityException();
                     }
-
-                    productService.Update(tempProduct);
-                }
-                else
-                {
-                    throw new IneduquateProductQuantityException();
                 }
             }
             catch (Exception)

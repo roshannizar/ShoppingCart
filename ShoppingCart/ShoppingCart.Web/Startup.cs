@@ -13,6 +13,7 @@ using Microsoft.Extensions.Hosting;
 using ShoppingCart.Core.ServiceInterface;
 using ShoppingCart.Core.Services;
 using ShoppingCart.Data.Context;
+using ShoppingCart.Web.AutoMapper;
 
 namespace ShoppingCart.Web
 {
@@ -36,7 +37,7 @@ namespace ShoppingCart.Web
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<ICustomerService, CustomerService>();
             services.AddScoped<IOrderService, OrderService>();
-            services.AddAutoMapper(typeof(Startup));
+            services.AddAutoMapper(typeof(MapConfig));
             services.AddControllersWithViews();
             services.AddMvc();
         }
