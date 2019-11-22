@@ -110,6 +110,7 @@ namespace ShoppingCart.Core.Services
             {
                 var order = GetSingleOrderById(id);
 
+                //Checks the confirmation
                 if(order.Status == StatusType.Confirmed)
                 {
                     db.Orders.Remove(order);
