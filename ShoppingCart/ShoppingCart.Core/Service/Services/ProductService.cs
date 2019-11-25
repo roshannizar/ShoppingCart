@@ -7,25 +7,30 @@ using ShoppingCart.Core.ServiceInterface;
 using ShoppingCart.Data.Models;
 using ShoppingCart.Core.Exceptions;
 using Microsoft.EntityFrameworkCore;
+using AutoMapper;
+using ShoppingCart.Core.BusinessObjectModels;
 
 namespace ShoppingCart.Core.Services
 {
     public class ProductService : IProductService
     {
         private readonly ShoppingCartDbContext db;
+        private readonly IMapper mapper;
 
-        public ProductService(ShoppingCartDbContext db)
+        public ProductService(ShoppingCartDbContext db, IMapper mapper)
         {
             this.db = db;
+            this.mapper = mapper;
         }
 
-        public void Create(Product product)
+        public void Create(ProductBO productBO)
         {
             try
             {
+                var product = mapper.Map<Product>(productBO);
                 db.Add(product);
             }
-            catch(ProductNotFoundException)
+            catch (ProductNotFoundException)
             {
                 throw new ProductNotFoundException();
             }
@@ -36,7 +41,7 @@ namespace ShoppingCart.Core.Services
             return db.SaveChanges();
         }
 
-        public IEnumerable<Product> GetProducts()
+        public IEnumerable<ProductBO> GetProducts()
         {
             try
             {
@@ -44,28 +49,28 @@ namespace ShoppingCart.Core.Services
                             orderby r.Name
                             select r;
 
-                return query;
+                return mapper.Map<IEnumerable<ProductBO>>(query.ToList());
             }
-            catch(ProductNotFoundException)
+            catch (ProductNotFoundException)
             {
                 throw new ProductNotFoundException();
             }
         }
 
-        public Product GetProduct(int id)
+        public ProductBO GetProduct(int id)
         {
             try
             {
                 var query = db.Products.Find(id);
-                return query;
+                return mapper.Map<ProductBO>(query);
             }
-            catch(ProductNotFoundException)
+            catch (ProductNotFoundException)
             {
                 throw new ProductNotFoundException();
             }
         }
 
-        public IEnumerable<Product> GetProductByName(string name)
+        public IEnumerable<ProductBO> GetProductByName(string name)
         {
             try
             {
@@ -74,31 +79,32 @@ namespace ShoppingCart.Core.Services
                             orderby r.Name
                             select r;
 
-                return query;
+                return mapper.Map<IEnumerable<ProductBO>>(query);
             }
-            catch(ProductNotFoundException)
+            catch (ProductNotFoundException)
             {
                 throw new ProductNotFoundException();
             }
-            catch(Exception)
+            catch (Exception)
             {
                 throw new Exception();
             }
         }
 
-        public void Update(Product product)
+        public void Update(ProductBO productBO)
         {
             try
             {
+                var product = mapper.Map<Product>(productBO);
                 var entry = db.Entry(product);
                 entry.State = EntityState.Modified;
                 Commit();
             }
-            catch(ProductNotFoundException)
+            catch (ProductNotFoundException)
             {
                 throw new ProductNotFoundException();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }

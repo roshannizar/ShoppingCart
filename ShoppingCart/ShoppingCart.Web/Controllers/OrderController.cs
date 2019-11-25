@@ -33,7 +33,8 @@ namespace ShoppingCart.Web.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            var Orders = orderService.GetOrders();
+            var OrdersBO = orderService.GetOrders();
+            var Orders = mapper.Map<IEnumerable<OrderViewModel>>(OrdersBO);
             return View(Orders);
         }
 
@@ -61,7 +62,7 @@ namespace ShoppingCart.Web.Controllers
         {
             try
             {
-                var order = mapper.Map<Order>(orderPlacementViewModel);
+                var order = mapper.Map<OrderBO>(orderPlacementViewModel);
                //Create Order
                 orderService.CreateOrder(order);
                
@@ -81,20 +82,23 @@ namespace ShoppingCart.Web.Controllers
             try
             {
                 //Loads the orders
-                ViewBag.Order = orderService.GetOrderById(id);
+                var ordersBO = orderService.GetOrderById(id);
+                ViewBag.Order = mapper.Map<IEnumerable<OrderViewModel>>(ordersBO);
                 //Load the status
-                ViewBag.Status = orderService.GetSingleOrderById(id).Status;
+                var StatusBO = orderService.GetSingleOrderById(id).Status;
+                ViewBag.Status = mapper.Map<StatusTypeViewModel>(StatusBO);
 
                 if (ViewBag.Status != null)
                 {
-                    var model = orderService.GetOrderLineByOrderId(id);
+                    var models = orderService.GetOrderLineByOrderId(id);
 
-                    if (model == null)
+                    if (models == null)
                     {
                         return NotFound();
                     }
                     else
                     {
+                        var model = mapper.Map<IEnumerable<OrderItemsViewModel>>(models);
                         return View(model);
                     }
                 }
@@ -137,7 +141,7 @@ namespace ShoppingCart.Web.Controllers
                 OrderPlacementViewModel orderPlacementViewModel = new OrderPlacementViewModel();
                 orderPlacementViewModel.OrderItems = orderItemsViewModel;
 
-                var order = mapper.Map<Order>(orderPlacementViewModel);
+                var order = mapper.Map<OrderBO>(orderPlacementViewModel);
                 orderService.UpdateOrder(order);
 
                 TempData["Message"] = "Save changes made for order Ref No: " +

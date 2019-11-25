@@ -1,4 +1,4 @@
-﻿using ShoppingCart.Data.Models;
+﻿using ShoppingCart.Core.BusinessObjectModels;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -7,8 +7,8 @@ namespace ShoppingCart.Core.ServiceInterface
 {
     public interface ICustomerService
     {
-        IEnumerable<Customer> GetCustomers();
-        void Create(Customer customer);
+        IEnumerable<CustomerBO> GetCustomers();
+        void Create(CustomerBO customer);
         int Commit();
     }
 }

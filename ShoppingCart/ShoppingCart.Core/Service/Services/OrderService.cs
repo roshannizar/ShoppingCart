@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using ShoppingCart.Core.BusinessObjectModels;
 using ShoppingCart.Core.Exceptions;
 using ShoppingCart.Core.ServiceInterface;
 using ShoppingCart.Data.Context;
@@ -12,19 +14,21 @@ namespace ShoppingCart.Core.Services
     public class OrderService : IOrderService
     {
         private readonly ShoppingCartDbContext db;
+        private readonly IMapper mapper;
         private readonly ProductService productService;
 
-        public OrderService(ShoppingCartDbContext db) 
+        public OrderService(ShoppingCartDbContext db,IMapper mapper) 
         {
             this.db = db;
-            productService = new ProductService(db);
+            this.mapper = mapper;
+            productService = new ProductService(db,mapper);
         }
 
-        public void CreateOrder(Order order)
+        public void CreateOrder(OrderBO orderBO)
         {
             try
             {
-                
+                var order = mapper.Map<Order>(orderBO);
                 //This method will add orderlines as well, since this entity has the orderline list
                 db.Orders.Add(order);
                 db.SaveChanges();
@@ -62,10 +66,11 @@ namespace ShoppingCart.Core.Services
             }
         }
 
-        public void UpdateOrder(Order order)
+        public void UpdateOrder(OrderBO orderBO)
         {
             try
             {
+                var order = mapper.Map<Order>(orderBO);
                 foreach (var items in order.OrderItems)
                 {
                     var tempProduct = productService.GetProduct(items.ProductId);
@@ -108,8 +113,8 @@ namespace ShoppingCart.Core.Services
         {
             try
             {
-                var order = GetSingleOrderById(id);
-
+                var orderBO = GetSingleOrderById(id);
+                var order = mapper.Map<Order>(orderBO);
                 //Checks the confirmation
                 if(order.Status == StatusType.Confirmed)
                 {
@@ -137,44 +142,48 @@ namespace ShoppingCart.Core.Services
             }
         }
 
-        public void DeleteOrderLine(OrderLine orderLine)
+        public void DeleteOrderLine(OrderLineBO orderLineBO)
         {
-            if (orderLine != null)
+            if (orderLineBO != null)
             {
+                var orderLine = mapper.Map<OrderLine>(orderLineBO);
                 db.OrderLines.Remove(orderLine);
                 db.SaveChanges();
             }
         }
 
-        public IEnumerable<Order> GetOrders()
+        public IEnumerable<OrderBO> GetOrders()
         {
             var query = db.Orders.Include(c => c.Customers).Include(ol => ol.OrderItems).ToList();
-            return query;
+
+            
+
+            return mapper.Map<IEnumerable<OrderBO>>(query);
         }
 
-        public IEnumerable<Order> GetOrderById(int id)
+        public IEnumerable<OrderBO> GetOrderById(int id)
         {
             var query = db.Orders.Include(c => c.Customers).Where(o => o.Id == id).ToList();
 
-            return query;
+            return mapper.Map<IEnumerable<OrderBO>>(query);
         }
 
-        public IEnumerable<OrderLine> GetOrderLineByOrderId(int id)
+        public IEnumerable<OrderLineBO> GetOrderLineByOrderId(int id)
         {
             var query = db.OrderLines.Include(p => p.Products).Include(o => o.Orders).Where(o => o.OrderId == id).ToList();
-            return query;
+            return mapper.Map<IEnumerable<OrderLineBO>>(query);
         }
 
-        public Order GetSingleOrderById(int id)
+        public OrderBO GetSingleOrderById(int id)
         {
             var query = db.Orders.Find(id);
-            return query;
+            return mapper.Map<OrderBO>(query);
         }
 
-        public OrderLine GetOrderLineById(int id)
+        public OrderLineBO GetOrderLineById(int id)
         {
             var query = db.OrderLines.Find(id);
-            return query;
+            return mapper.Map<OrderLineBO>(query);
         }
     }
 }

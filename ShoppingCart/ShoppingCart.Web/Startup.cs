@@ -13,6 +13,8 @@ using Microsoft.Extensions.Hosting;
 using ShoppingCart.Core.ServiceInterface;
 using ShoppingCart.Core.Services;
 using ShoppingCart.Data.Context;
+using ShoppingCart.Data.Repository.Respositories;
+using ShoppingCart.Data.Repository.RespositoryInterface;
 using ShoppingCart.Web.AutoMapper;
 
 namespace ShoppingCart.Web
@@ -34,10 +36,18 @@ namespace ShoppingCart.Web
                 options.UseSqlServer(Configuration.GetConnectionString("Shopping"));
             });
 
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<ICustomerService, CustomerService>();
             services.AddScoped<IOrderService, OrderService>();
-            services.AddAutoMapper(typeof(MapConfig));
+
+            var config = new MapperConfiguration(mapperProfiler =>
+            {
+                mapperProfiler.AddProfile(new MapConfig());
+            });
+            var mapper = config.CreateMapper();
+
+            services.AddSingleton(mapper);
             services.AddControllersWithViews();
             services.AddMvc();
         }

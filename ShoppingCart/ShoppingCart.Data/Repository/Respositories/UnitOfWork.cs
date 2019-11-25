@@ -10,15 +10,15 @@ namespace ShoppingCart.Data.Repository.Respositories
 {
     public class UnitOfWork : IUnitOfWork, IDisposable
     {
-        public ShoppingCartDbContext shoppingCartDbContext { get; }
         private GenericRepository<Customer> customerRepository;
         private GenericRepository<Order> orderRepository;
         private GenericRepository<Product> productRepository;
         private GenericRepository<OrderLine> orderItemRepository;
+        private readonly ShoppingCartDbContext context;
 
         public UnitOfWork(DbContext dbContext)
         {
-            shoppingCartDbContext = (ShoppingCartDbContext)dbContext;
+            context = (ShoppingCartDbContext)dbContext;
         }
 
         public GenericRepository<Customer> CustomerRepository
@@ -27,7 +27,7 @@ namespace ShoppingCart.Data.Repository.Respositories
             {
                 if (this.customerRepository == null)
                 {
-                    this.customerRepository = new GenericRepository<Customer>(shoppingCartDbContext);
+                    this.customerRepository = new GenericRepository<Customer>(context);
                 }
                 return customerRepository;
             }
@@ -39,7 +39,7 @@ namespace ShoppingCart.Data.Repository.Respositories
             {
                 if (this.orderRepository == null)
                 {
-                    this.orderRepository = new GenericRepository<Order>(shoppingCartDbContext);
+                    this.orderRepository = new GenericRepository<Order>(context);
                 }
                 return orderRepository;
             }
@@ -51,7 +51,7 @@ namespace ShoppingCart.Data.Repository.Respositories
             {
                 if (this.productRepository == null)
                 {
-                    this.productRepository = new GenericRepository<Product>(shoppingCartDbContext);
+                    this.productRepository = new GenericRepository<Product>(context);
                 }
                 return productRepository;
             }
@@ -63,7 +63,7 @@ namespace ShoppingCart.Data.Repository.Respositories
             {
                 if (this.orderItemRepository == null)
                 {
-                    this.orderItemRepository = new GenericRepository<OrderLine>(shoppingCartDbContext);
+                    this.orderItemRepository = new GenericRepository<OrderLine>(context);
                 }
                 return orderItemRepository;
             }
@@ -71,7 +71,7 @@ namespace ShoppingCart.Data.Repository.Respositories
 
         public void Save()
         {
-            shoppingCartDbContext.SaveChanges();
+            context.SaveChanges();
         }
 
         private bool disposed = false;
@@ -82,7 +82,7 @@ namespace ShoppingCart.Data.Repository.Respositories
             {
                 if (disposing)
                 {
-                    shoppingCartDbContext.Dispose();
+                    context.Dispose();
                 }
             }
             this.disposed = true;
@@ -92,6 +92,11 @@ namespace ShoppingCart.Data.Repository.Respositories
         {
             Dispose(true);
             GC.SuppressFinalize(this);
+        }
+
+        public ShoppingCartDbContext DbContext
+        {
+            get { return context; }
         }
     }
 }

@@ -12,5 +12,7 @@ namespace ShoppingCart.Web.ViewModels
         public double UnitPrice { get; set; }
         public int Quantity { get; set; }
         public int OrderId { get; set; }
+        public OrderViewModel Orders { get; set; }
+        public ProductViewModel Products { get; set; }
     }
 }

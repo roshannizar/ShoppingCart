@@ -2039,6 +2039,7 @@
       },
       "ShoppingCart.Core/1.0.0": {
         "dependencies": {
+          "AutoMapper.Extensions.Microsoft.DependencyInjection": "7.0.0",
           "ShoppingCart.Data": "1.0.0"
         },
         "runtime": {

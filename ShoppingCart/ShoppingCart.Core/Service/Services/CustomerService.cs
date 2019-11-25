@@ -1,4 +1,6 @@
-﻿using ShoppingCart.Core.Exceptions;
+﻿using AutoMapper;
+using ShoppingCart.Core.BusinessObjectModels;
+using ShoppingCart.Core.Exceptions;
 using ShoppingCart.Core.ServiceInterface;
 using ShoppingCart.Data.Context;
 using ShoppingCart.Data.Models;
@@ -11,10 +13,12 @@ namespace ShoppingCart.Core.Services
     public class CustomerService : ICustomerService
     {
         private readonly ShoppingCartDbContext db;
+        private readonly IMapper mapper;
 
-        public CustomerService(ShoppingCartDbContext db)
+        public CustomerService(ShoppingCartDbContext db,IMapper mapper)
         {
             this.db = db;
+            this.mapper = mapper;
         }
 
         public int Commit()
@@ -22,10 +26,11 @@ namespace ShoppingCart.Core.Services
             return db.SaveChanges();
         }
 
-        public void Create(Customer customer)
+        public void Create(CustomerBO customerBO)
         {
             try
             {
+                var customer = mapper.Map<Customer>(customerBO);
                 db.Customers.Add(customer);
             }
             catch(CustomerNotFoundException)
@@ -34,13 +39,13 @@ namespace ShoppingCart.Core.Services
             }
         }
 
-        public IEnumerable<Customer> GetCustomers()
+        public IEnumerable<CustomerBO> GetCustomers()
         {
             try
             {
                 var query = from c in db.Customers
                             select c;
-                return query;
+                return mapper.Map<IEnumerable<CustomerBO>>(query);
             }
             catch(CustomerNotFoundException)
             {
