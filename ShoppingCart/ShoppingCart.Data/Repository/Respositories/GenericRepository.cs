@@ -63,14 +63,13 @@ namespace ShoppingCart.Data.Repository.Respositories
             return dbSet.Find(id);
         }
 
-        public void Insert(TEntity entity)
+        public void Create(TEntity entity)
         {
             dbSet.Add(entity); 
         }
 
         public void Update(TEntity entityToUpdate)
         {
-            dbSet.Attach(entityToUpdate);
             shoppingCartDbContext.Entry(entityToUpdate).State = EntityState.Modified;
         }
     }

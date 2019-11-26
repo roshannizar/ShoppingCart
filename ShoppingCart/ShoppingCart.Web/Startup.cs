@@ -21,12 +21,11 @@ namespace ShoppingCart.Web
 {
     public class Startup
     {
+        public IConfiguration Configuration { get; }
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
-
-        public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -35,8 +34,8 @@ namespace ShoppingCart.Web
             {
                 options.UseSqlServer(Configuration.GetConnectionString("Shopping"));
             });
-
-            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<DbContext, ShoppingCartDbContext>();
+            services.AddTransient<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<ICustomerService, CustomerService>();
             services.AddScoped<IOrderService, OrderService>();

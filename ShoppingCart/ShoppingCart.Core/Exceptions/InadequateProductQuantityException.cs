@@ -4,9 +4,9 @@ using System.Text;
 
 namespace ShoppingCart.Core.Exceptions
 {
-    public class IneduquateProductQuantityException:Exception
+    public class InadequateProductQuantityException:Exception
     {
-        public IneduquateProductQuantityException():base("Ineduquate Quantity")
+        public InadequateProductQuantityException():base("Ineduquate Quantity")
         {
 
         }

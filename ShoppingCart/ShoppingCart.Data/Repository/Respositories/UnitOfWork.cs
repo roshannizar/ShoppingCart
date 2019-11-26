@@ -94,9 +94,9 @@ namespace ShoppingCart.Data.Repository.Respositories
             GC.SuppressFinalize(this);
         }
 
-        public ShoppingCartDbContext DbContext
-        {
-            get { return context; }
-        }
+        //public ShoppingCartDbContext DbContext
+        //{
+        //    get { return context; }
+        //}
     }
 }

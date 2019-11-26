@@ -9,6 +9,5 @@ namespace ShoppingCart.Core.ServiceInterface
     {
         IEnumerable<CustomerBO> GetCustomers();
         void Create(CustomerBO customer);
-        int Commit();
     }
 }

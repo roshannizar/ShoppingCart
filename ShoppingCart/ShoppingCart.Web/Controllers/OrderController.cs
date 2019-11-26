@@ -118,7 +118,7 @@ namespace ShoppingCart.Web.Controllers
             {
                 orderService.DeleteOrder(id);
                 TempData["Message"] = "You have deleted the order Ref No: "+id+" successfully!";
-                return RedirectToAction("Index");
+                return RedirectToAction("Order","Index");
             }
             catch(Exception ex)
             {
@@ -138,10 +138,7 @@ namespace ShoppingCart.Web.Controllers
                 if (!(orderItemsViewModel.Count > 0))
                     return RedirectToAction("Index");
 
-                OrderPlacementViewModel orderPlacementViewModel = new OrderPlacementViewModel();
-                orderPlacementViewModel.OrderItems = orderItemsViewModel;
-
-                var order = mapper.Map<OrderBO>(orderPlacementViewModel);
+                var order = mapper.Map<List<OrderLineBO>>(orderItemsViewModel);
                 orderService.UpdateOrder(order);
 
                 TempData["Message"] = "Save changes made for order Ref No: " +

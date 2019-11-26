@@ -11,7 +11,6 @@ namespace ShoppingCart.Core.ServiceInterface
         ProductBO GetProduct(int id);
         IEnumerable<ProductBO> GetProductByName(string name);
         void Create(ProductBO product);
-        void Update(ProductBO product);
-        int Commit();
+        void Update(int productId, int quantity);
     }
 }

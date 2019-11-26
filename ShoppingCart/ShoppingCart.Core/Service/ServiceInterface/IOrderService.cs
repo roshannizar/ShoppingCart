@@ -12,7 +12,7 @@ namespace ShoppingCart.Core.ServiceInterface
         OrderBO GetSingleOrderById(int id);
         OrderLineBO GetOrderLineById(int id);
         void CreateOrder(OrderBO order);
-        void UpdateOrder(OrderBO order);
+        void UpdateOrder(List<OrderLineBO> orderLineBOs);
         void DeleteOrderLine(OrderLineBO orderLine);
         void DeleteOrder(int id);
     }

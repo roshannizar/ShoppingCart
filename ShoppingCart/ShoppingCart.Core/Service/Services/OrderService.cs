@@ -8,104 +8,80 @@ using ShoppingCart.Core.Exceptions;
 using ShoppingCart.Core.ServiceInterface;
 using ShoppingCart.Data.Context;
 using ShoppingCart.Data.Models;
+using ShoppingCart.Data.Repository.RespositoryInterface;
 
 namespace ShoppingCart.Core.Services
 {
     public class OrderService : IOrderService
     {
-        private readonly ShoppingCartDbContext db;
+        private readonly IUnitOfWork unitOfWork;
         private readonly IMapper mapper;
         private readonly ProductService productService;
 
-        public OrderService(ShoppingCartDbContext db,IMapper mapper) 
+        public OrderService(IUnitOfWork unitOfWork,IMapper mapper) 
         {
-            this.db = db;
+            this.unitOfWork = unitOfWork;
             this.mapper = mapper;
-            productService = new ProductService(db,mapper);
+            productService = new ProductService(unitOfWork, mapper);
         }
 
         public void CreateOrder(OrderBO orderBO)
         {
             try
             {
+                foreach(var items in orderBO.OrderItems)
+                {
+                    productService.Update(items.ProductId, -(items.Quantity));
+                }
+
                 var order = mapper.Map<Order>(orderBO);
                 //This method will add orderlines as well, since this entity has the orderline list
-                db.Orders.Add(order);
-                db.SaveChanges();
-
-                foreach (var items in order.OrderItems)
-                {
-                    //Retrieving the product by id
-                    var tempProduct = productService.GetProduct(items.ProductId);
-
-                    if (items.Quantity <= tempProduct.Quantity)
-                    {
-                        var remainingStock = tempProduct.Quantity - items.Quantity;
-                        tempProduct.Quantity = remainingStock;
-
-                        //Updating the product
-                        productService.Update(tempProduct);
-                    }
-                }
+                unitOfWork.OrderRepository.Create(order);
+                unitOfWork.Save();
+                
             }
-            catch(OrderNotFoundException)
+            catch(OrderNotFoundException ex)
             {
-                throw new OrderNotFoundException();
-            }
-            catch(OrderLineNotFoundException)
-            {
-                throw new OrderLineNotFoundException();
-            }
-            catch(IneduquateProductQuantityException)
-            {
-                throw new IneduquateProductQuantityException();
-            }
-            catch (Exception)
-            {
-                throw new Exception();
+                throw ex;
             }
         }
 
-        public void UpdateOrder(OrderBO orderBO)
+        public void UpdateOrder(List<OrderLineBO> orderLineBOs)
         {
             try
             {
-                var order = mapper.Map<Order>(orderBO);
-                foreach (var items in order.OrderItems)
+                var order = mapper.Map<List<OrderLine>>(orderLineBOs);
+
+                foreach (var item in order)
                 {
-                    var tempProduct = productService.GetProduct(items.ProductId);
-                    var tempOrderLine = GetOrderLineById(items.Id);
+                    //Retrieving the orderline as temporary to check the database quantity
+                    var tempOrderLineBO = GetOrderLineById(item.Id);
 
-                    var tempDifference = tempOrderLine.Quantity - items.Quantity;
-                    var productQuantityTemp = tempDifference + tempProduct.Quantity;
+                    //Identifying the difference between the updated orderline and database quantity
+                    var tempDifference = tempOrderLineBO.Quantity - item.Quantity;
 
-                    if (tempDifference <= productQuantityTemp)
+                    //setting the quantity
+                    item.Quantity = item.Quantity;
+
+                    if (tempOrderLineBO.Quantity == 0)
                     {
-                        tempProduct.Quantity = productQuantityTemp;
-                        tempOrderLine.Quantity = items.Quantity;
-
-                        if (tempOrderLine.Quantity == 0)
-                        {
-                            DeleteOrderLine(tempOrderLine);
-                        }
-                        else
-                        {
-                            var entry = db.Entry(tempOrderLine);
-                            entry.State = EntityState.Modified;
-                            db.SaveChanges();
-                        }
-
-                        productService.Update(tempProduct);
+                        //If the quantity is zero the order item is deleted
+                        DeleteOrderLine(tempOrderLineBO);
                     }
                     else
                     {
-                        throw new IneduquateProductQuantityException();
+                        //updates the difference quantity
+                        //productService.Update(item.ProductId, tempDifference);
+
+                        //updates the orderline
+                        unitOfWork.OrderItemRepository.Update(item);
+                        unitOfWork.Save();
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw new Exception();
+                throw ex;
             }
         }
 
@@ -114,75 +90,99 @@ namespace ShoppingCart.Core.Services
             try
             {
                 var orderBO = GetSingleOrderById(id);
+
+                if (orderBO == null)
+                    throw new OrderNotFoundException();
+
                 var order = mapper.Map<Order>(orderBO);
-                //Checks the confirmation
-                if(order.Status == StatusType.Confirmed)
+                //Checks the status type
+                if (order.Status == StatusType.Confirmed)
                 {
-                    db.Orders.Remove(order);
-                } 
+                    //product quantity will not be update if the status is confirmed
+                    unitOfWork.OrderRepository.Delete(order);
+                }
                 else
                 {
-                    var orderLineTemp = GetOrderLineByOrderId(id);
+                    //Retrieving the orderLine from the database, so that can get the quantity
+                    var orderLineBOTemp = GetOrderLineByOrderId(id);
 
-                    foreach(var temp in orderLineTemp)
+                    foreach (var temp in orderLineBOTemp)
                     {
-                        var tempProduct = productService.GetProduct(temp.ProductId);
-                        var tempQuantity = tempProduct.Quantity + temp.Quantity;
-                        tempProduct.Quantity = tempQuantity;
-                        productService.Update(tempProduct);
+                        //updates the quantity
+                        //productService.Update(temp.ProductId, temp.Quantity);
                     }
 
-                    db.Orders.Remove(order);
+                    unitOfWork.OrderRepository.Delete(order);
                 }
-                db.SaveChanges();
+                //Records will be saved after checking the status type
+                unitOfWork.Save();
             }
-            catch(OrderNotFoundException)
+            catch(Exception ex)
             {
-                throw new OrderNotFoundException();
+                throw ex;
             }
         }
 
         public void DeleteOrderLine(OrderLineBO orderLineBO)
         {
-            if (orderLineBO != null)
-            {
-                var orderLine = mapper.Map<OrderLine>(orderLineBO);
-                db.OrderLines.Remove(orderLine);
-                db.SaveChanges();
-            }
+            if (orderLineBO == null)
+                throw new OrderLineNotFoundException();
+
+            var orderLine = mapper.Map<OrderLine>(orderLineBO);
+            unitOfWork.OrderItemRepository.Delete(orderLine);
+            unitOfWork.Save();
         }
 
         public IEnumerable<OrderBO> GetOrders()
         {
-            var query = db.Orders.Include(c => c.Customers).Include(ol => ol.OrderItems).ToList();
-
-            
-
+            var query = unitOfWork.OrderRepository.Get(includeProperties:"OrderItems,Customers");
             return mapper.Map<IEnumerable<OrderBO>>(query);
         }
 
         public IEnumerable<OrderBO> GetOrderById(int id)
         {
-            var query = db.Orders.Include(c => c.Customers).Where(o => o.Id == id).ToList();
+            var query = unitOfWork.OrderRepository.Get(includeProperties:"Customers")
+                .Where(o =>o.Id == id)
+                .Select(obo => new OrderBO
+                {
+                    Id =obo.Id,
+                    CustomerId = obo.CustomerId,
+                    Customers = mapper.Map<CustomerBO>(obo.Customers),
+                    Date = obo.Date,
+                    Status = mapper.Map<StatusTypeBO>(obo.Status),
+                    OrderItems = mapper.Map<List<OrderLineBO>>(obo.OrderItems)
+                }).ToList();
 
             return mapper.Map<IEnumerable<OrderBO>>(query);
         }
 
         public IEnumerable<OrderLineBO> GetOrderLineByOrderId(int id)
         {
-            var query = db.OrderLines.Include(p => p.Products).Include(o => o.Orders).Where(o => o.OrderId == id).ToList();
+            var query = unitOfWork.OrderItemRepository.Get(includeProperties: "Orders,Products")
+                 .Where(o => o.OrderId == id)
+                 .Select(obo => new OrderLineBO
+                 {
+                     Id = obo.Id,
+                     OrderId = obo.OrderId,
+                     Orders = mapper.Map<OrderBO>(obo.Orders),
+                     ProductId = obo.ProductId,
+                     Products = mapper.Map<ProductBO>(obo.Products),
+                     Quantity = obo.Quantity,
+                     UnitPrice = obo.UnitPrice
+                 }).ToList(); 
+
             return mapper.Map<IEnumerable<OrderLineBO>>(query);
         }
 
         public OrderBO GetSingleOrderById(int id)
         {
-            var query = db.Orders.Find(id);
+            var query = unitOfWork.OrderRepository.GetByID(id);
             return mapper.Map<OrderBO>(query);
         }
 
         public OrderLineBO GetOrderLineById(int id)
         {
-            var query = db.OrderLines.Find(id);
+            var query = unitOfWork.OrderItemRepository.GetByID(id);
             return mapper.Map<OrderLineBO>(query);
         }
     }

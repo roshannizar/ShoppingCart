@@ -9,17 +9,18 @@ using ShoppingCart.Core.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper;
 using ShoppingCart.Core.BusinessObjectModels;
+using ShoppingCart.Data.Repository.RespositoryInterface;
 
 namespace ShoppingCart.Core.Services
 {
     public class ProductService : IProductService
     {
-        private readonly ShoppingCartDbContext db;
+        private readonly IUnitOfWork unitOfWork;
         private readonly IMapper mapper;
 
-        public ProductService(ShoppingCartDbContext db, IMapper mapper)
+        public ProductService(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            this.db = db;
+            this.unitOfWork = unitOfWork;
             this.mapper = mapper;
         }
 
@@ -28,7 +29,8 @@ namespace ShoppingCart.Core.Services
             try
             {
                 var product = mapper.Map<Product>(productBO);
-                db.Add(product);
+                unitOfWork.ProductRepository.Create(product);
+                unitOfWork.Save();
             }
             catch (ProductNotFoundException)
             {
@@ -36,18 +38,11 @@ namespace ShoppingCart.Core.Services
             }
         }
 
-        public int Commit()
-        {
-            return db.SaveChanges();
-        }
-
         public IEnumerable<ProductBO> GetProducts()
         {
             try
             {
-                var query = from r in db.Products
-                            orderby r.Name
-                            select r;
+                var query = (unitOfWork.ProductRepository.Get());
 
                 return mapper.Map<IEnumerable<ProductBO>>(query.ToList());
             }
@@ -61,7 +56,7 @@ namespace ShoppingCart.Core.Services
         {
             try
             {
-                var query = db.Products.Find(id);
+                var query = unitOfWork.ProductRepository.GetByID(id);
                 return mapper.Map<ProductBO>(query);
             }
             catch (ProductNotFoundException)
@@ -74,12 +69,23 @@ namespace ShoppingCart.Core.Services
         {
             try
             {
-                var query = from r in db.Products
-                            where r.Name.StartsWith(name) || string.IsNullOrEmpty(name)
-                            orderby r.Name
-                            select r;
+                var productList = (unitOfWork.ProductRepository.Get()
+                  .Where(p => p.Name.StartsWith(name, StringComparison.InvariantCultureIgnoreCase))
+                     .Select(p => new ProductBO
+                     {
+                         Id = p.Id,
+                         Name = p.Name
+                     }));
 
-                return mapper.Map<IEnumerable<ProductBO>>(query);
+                if (productList.Count() == 0)
+                {
+                    productList = productList.Concat(new ProductBO[] { new ProductBO() { Id = -1, Name = "No Products Available!" } });
+                    return productList;
+                }
+                else
+                {
+                    return productList;
+                }
             }
             catch (ProductNotFoundException)
             {
@@ -90,23 +96,29 @@ namespace ShoppingCart.Core.Services
                 throw new Exception();
             }
         }
-
-        public void Update(ProductBO productBO)
+        
+        public void Update(int productId, int quantity)
         {
             try
             {
+                var productBO = GetProduct(productId);
                 var product = mapper.Map<Product>(productBO);
-                var entry = db.Entry(product);
-                entry.State = EntityState.Modified;
-                Commit();
+
+                if (product != null)
+                {
+                    product.Quantity = product.Quantity + quantity;
+                }
+                else
+                {
+                    throw new ProductNotFoundException();
+                }
+
+                unitOfWork.ProductRepository.Update(product);
+                unitOfWork.Save();
             }
-            catch (ProductNotFoundException)
+            catch(Exception ex)
             {
-                throw new ProductNotFoundException();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
+                throw ex;
             }
         }
     }
