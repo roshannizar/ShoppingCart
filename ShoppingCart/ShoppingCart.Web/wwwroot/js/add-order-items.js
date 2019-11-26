@@ -114,8 +114,6 @@ function ConfirmOrder() {
                 res.request
             });
 
-        location.replace("Index");
-
     } else {
         alert("Choose a customer");
     }

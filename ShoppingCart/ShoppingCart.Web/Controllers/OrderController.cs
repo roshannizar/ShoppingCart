@@ -67,7 +67,7 @@ namespace ShoppingCart.Web.Controllers
                 orderService.CreateOrder(order);
                
                 TempData["Message"] = "Order has been added successfully!";
-                return RedirectToAction("Index");
+                return RedirectToAction("Index","Order");
             }
             catch (Exception ex)
             {
@@ -118,7 +118,7 @@ namespace ShoppingCart.Web.Controllers
             {
                 orderService.DeleteOrder(id);
                 TempData["Message"] = "You have deleted the order Ref No: "+id+" successfully!";
-                return RedirectToAction("Order","Index");
+                return RedirectToAction("Index","Order");
             }
             catch(Exception ex)
             {
@@ -143,7 +143,7 @@ namespace ShoppingCart.Web.Controllers
 
                 TempData["Message"] = "Save changes made for order Ref No: " +
                     orderItemsViewModel[0].OrderId + " successfully!";
-                return RedirectToAction("Index");
+                return RedirectToAction("Index","Order");
 
             }
             catch(Exception ex)

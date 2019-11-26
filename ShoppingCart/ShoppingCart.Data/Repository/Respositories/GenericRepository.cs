@@ -70,7 +70,7 @@ namespace ShoppingCart.Data.Repository.Respositories
 
         public void Update(TEntity entityToUpdate)
         {
-            shoppingCartDbContext.Entry(entityToUpdate).State = EntityState.Modified;
+            dbSet.Update(entityToUpdate);
         }
     }
 }

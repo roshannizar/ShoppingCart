@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using AutoMapper;
 using ShoppingCart.Core.BusinessObjectModels;
 using ShoppingCart.Data.Repository.RespositoryInterface;
+using System.Threading.Tasks;
 
 namespace ShoppingCart.Core.Services
 {
@@ -101,18 +102,18 @@ namespace ShoppingCart.Core.Services
         {
             try
             {
-                var productBO = GetProduct(productId);
-                var product = mapper.Map<Product>(productBO);
+                var productBO = unitOfWork.ProductRepository.GetByID(productId);
 
-                if (product != null)
+                if (productBO != null)
                 {
-                    product.Quantity = product.Quantity + quantity;
+                    productBO.Quantity = productBO.Quantity + quantity;
                 }
                 else
                 {
                     throw new ProductNotFoundException();
                 }
 
+                var product = mapper.Map<Product>(productBO);
                 unitOfWork.ProductRepository.Update(product);
                 unitOfWork.Save();
             }

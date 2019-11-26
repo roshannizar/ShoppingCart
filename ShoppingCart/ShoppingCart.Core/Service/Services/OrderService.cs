@@ -29,16 +29,16 @@ namespace ShoppingCart.Core.Services
         {
             try
             {
-                foreach(var items in orderBO.OrderItems)
+                foreach(var item in orderBO.OrderItems)
                 {
-                    productService.Update(items.ProductId, -(items.Quantity));
+
+                    productService.Update(item.ProductId, -(item.Quantity));
                 }
 
                 var order = mapper.Map<Order>(orderBO);
                 //This method will add orderlines as well, since this entity has the orderline list
                 unitOfWork.OrderRepository.Create(order);
                 unitOfWork.Save();
-                
             }
             catch(OrderNotFoundException ex)
             {
@@ -50,33 +50,34 @@ namespace ShoppingCart.Core.Services
         {
             try
             {
-                var order = mapper.Map<List<OrderLine>>(orderLineBOs);
 
-                foreach (var item in order)
+                foreach (var item in orderLineBOs)
                 {
                     //Retrieving the orderline as temporary to check the database quantity
-                    var tempOrderLineBO = GetOrderLineById(item.Id);
+                    var tempOrderLine = unitOfWork.OrderItemRepository.GetByID(item.Id);
 
                     //Identifying the difference between the updated orderline and database quantity
-                    var tempDifference = tempOrderLineBO.Quantity - item.Quantity;
+                    var tempDifference = tempOrderLine.Quantity - item.Quantity;
 
                     //setting the quantity
-                    item.Quantity = item.Quantity;
+                    tempOrderLine.Quantity = item.Quantity;
 
-                    if (tempOrderLineBO.Quantity == 0)
+                    if (item.Quantity == 0)
                     {
                         //If the quantity is zero the order item is deleted
-                        DeleteOrderLine(tempOrderLineBO);
+                        DeleteOrderLine(tempOrderLine);
                     }
                     else
                     {
-                        //updates the difference quantity
-                        //productService.Update(item.ProductId, tempDifference);
 
                         //updates the orderline
-                        unitOfWork.OrderItemRepository.Update(item);
+                        var order = mapper.Map<OrderLine>(tempOrderLine);
+                        unitOfWork.OrderItemRepository.Update(order);
                         unitOfWork.Save();
                     }
+
+                    //updates the difference quantity
+                    productService.Update(item.ProductId, tempDifference);
                 }
             }
             catch (Exception ex)
@@ -89,7 +90,8 @@ namespace ShoppingCart.Core.Services
         {
             try
             {
-                var orderBO = GetSingleOrderById(id);
+                var orderBO =unitOfWork.OrderRepository.GetByID(id);
+
 
                 if (orderBO == null)
                     throw new OrderNotFoundException();
@@ -109,7 +111,7 @@ namespace ShoppingCart.Core.Services
                     foreach (var temp in orderLineBOTemp)
                     {
                         //updates the quantity
-                        //productService.Update(temp.ProductId, temp.Quantity);
+                        productService.Update(temp.ProductId, temp.Quantity);
                     }
 
                     unitOfWork.OrderRepository.Delete(order);
@@ -123,12 +125,10 @@ namespace ShoppingCart.Core.Services
             }
         }
 
-        public void DeleteOrderLine(OrderLineBO orderLineBO)
+        private void DeleteOrderLine(OrderLine orderLine)
         {
-            if (orderLineBO == null)
+            if (orderLine == null)
                 throw new OrderLineNotFoundException();
-
-            var orderLine = mapper.Map<OrderLine>(orderLineBO);
             unitOfWork.OrderItemRepository.Delete(orderLine);
             unitOfWork.Save();
         }
