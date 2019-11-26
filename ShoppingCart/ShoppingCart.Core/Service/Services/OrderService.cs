@@ -31,7 +31,7 @@ namespace ShoppingCart.Core.Services
             {
                 foreach(var item in orderBO.OrderItems)
                 {
-
+                    //Updating the product
                     productService.Update(item.ProductId, -(item.Quantity));
                 }
 
@@ -91,7 +91,6 @@ namespace ShoppingCart.Core.Services
             try
             {
                 var orderBO =unitOfWork.OrderRepository.GetByID(id);
-
 
                 if (orderBO == null)
                     throw new OrderNotFoundException();
