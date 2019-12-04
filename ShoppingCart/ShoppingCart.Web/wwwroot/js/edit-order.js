@@ -80,7 +80,7 @@ function ConfirmOrderChanges() {
 }
 
 function Confirm() {
-    const url = "../../Order/OrderEdit";
+    const url = "../../Order/UpdateOrder";
     var date = new Date();
     var currentDate = JSON.stringify(date);
 

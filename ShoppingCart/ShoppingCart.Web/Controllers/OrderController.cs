@@ -126,7 +126,7 @@ namespace ShoppingCart.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult OrderEdit([FromBody]OrderViewModel orderViewModel)
+        public IActionResult UpdateOrder([FromBody]OrderViewModel orderViewModel)
         {
             try
             {

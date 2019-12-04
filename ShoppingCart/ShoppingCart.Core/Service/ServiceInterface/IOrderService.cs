@@ -9,7 +9,7 @@ namespace ShoppingCart.Core.ServiceInterface
         IEnumerable<OrderBO> GetOrders();
         OrderBO GetOrderById(int id);
         void CreateOrder(OrderBO order);
-        void UpdateOrder(List<OrderLineBO> orderLineBOs);
+        void UpdateOrder(OrderBO orderBOs);
         void DeleteOrder(int id);
     }
 }
