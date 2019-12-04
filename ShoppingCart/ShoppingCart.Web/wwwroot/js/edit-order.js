@@ -81,10 +81,20 @@ function ConfirmOrderChanges() {
 
 function Confirm() {
     const url = "../../Order/OrderEdit";
+    var date = new Date();
+    var currentDate = JSON.stringify(date);
+
+    var order = {
+        CustomerId: 0,
+        Date: null,
+        OrderItems: TempProduct
+    }
+
+    order.Date = currentDate.replace(/^"(.*)"$/, '$1');
 
     const request = new Request(url, {
         method: 'POST',
-        body: JSON.stringify(TempProduct),
+        body: JSON.stringify(order),
         headers: new Headers({
             'Content-Type': 'application/json'
         })

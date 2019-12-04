@@ -46,12 +46,12 @@ namespace ShoppingCart.Core.Services
             }
         }
 
-        public void UpdateOrder(List<OrderLineBO> orderLineBOs)
+        public void UpdateOrder(OrderBO orderBOs)
         {
             try
             {
 
-                foreach (var item in orderLineBOs)
+                foreach (var item in orderBOs.OrderItems)
                 {
                     //Retrieving the orderline as temporary to check the database quantity
                     var tempOrderLine = unitOfWork.OrderItemRepository.GetByID(item.Id);

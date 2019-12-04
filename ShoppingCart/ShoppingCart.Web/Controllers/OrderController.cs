@@ -126,21 +126,21 @@ namespace ShoppingCart.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult OrderEdit([FromBody]List<OrderItemsViewModel> orderItemsViewModel)
+        public IActionResult OrderEdit([FromBody]OrderViewModel orderViewModel)
         {
             try
             {
                 if (!ModelState.IsValid)                                   
                    return View("OrderEdit");                   
                 
-                if (!(orderItemsViewModel.Count > 0))
+                if (!(orderViewModel.OrderItems.Count > 0))
                     return RedirectToAction("Index");
 
-                var order = mapper.Map<List<OrderLineBO>>(orderItemsViewModel);
+                var order = mapper.Map<OrderBO>(orderViewModel);
                 orderService.UpdateOrder(order);
 
                 TempData["Message"] = "Save changes made for order Ref No: " +
-                    orderItemsViewModel[0].OrderId + " successfully!";
+                    orderViewModel.OrderItems[0].OrderId + " successfully!";
                 return RedirectToAction("Index","Order");
 
             }
