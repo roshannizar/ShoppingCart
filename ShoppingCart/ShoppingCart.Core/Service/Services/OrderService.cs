@@ -90,7 +90,7 @@ namespace ShoppingCart.Core.Services
         {
             try
             {
-                var orderBO =unitOfWork.OrderRepository.GetByID(id);
+                var orderBO = unitOfWork.OrderRepository.GetByID(id);
 
                 if (orderBO == null)
                     throw new OrderNotFoundException();
@@ -105,7 +105,7 @@ namespace ShoppingCart.Core.Services
                 else
                 {
                     //Retrieving the orderLine from the database, so that can get the quantity
-                    var orderLineBOTemp = GetOrderLineByOrderId(id);
+                    var orderLineBOTemp = GetOrderById(id).OrderItems;
 
                     foreach (var temp in orderLineBOTemp)
                     {
@@ -138,51 +138,12 @@ namespace ShoppingCart.Core.Services
             return mapper.Map<IEnumerable<OrderBO>>(query);
         }
 
-        public IEnumerable<OrderBO> GetOrderById(int id)
+        public OrderBO GetOrderById(int id)
         {
-            var query = unitOfWork.OrderRepository.Get(includeProperties:"Customers")
-                .Where(o =>o.Id == id)
-                .Select(obo => new OrderBO
-                {
-                    Id =obo.Id,
-                    CustomerId = obo.CustomerId,
-                    Customers = mapper.Map<CustomerBO>(obo.Customers),
-                    Date = obo.Date,
-                    Status = mapper.Map<StatusTypeBO>(obo.Status),
-                    OrderItems = mapper.Map<List<OrderLineBO>>(obo.OrderItems)
-                }).ToList();
+            var query = unitOfWork.OrderRepository.Get(includeProperties: "Customers,OrderItems").First(o => o.Id == id);
 
-            return mapper.Map<IEnumerable<OrderBO>>(query);
-        }
-
-        public IEnumerable<OrderLineBO> GetOrderLineByOrderId(int id)
-        {
-            var query = unitOfWork.OrderItemRepository.Get(includeProperties: "Orders,Products")
-                 .Where(o => o.OrderId == id)
-                 .Select(obo => new OrderLineBO
-                 {
-                     Id = obo.Id,
-                     OrderId = obo.OrderId,
-                     Orders = mapper.Map<OrderBO>(obo.Orders),
-                     ProductId = obo.ProductId,
-                     Products = mapper.Map<ProductBO>(obo.Products),
-                     Quantity = obo.Quantity,
-                     UnitPrice = obo.UnitPrice
-                 }).ToList(); 
-
-            return mapper.Map<IEnumerable<OrderLineBO>>(query);
-        }
-
-        public OrderBO GetSingleOrderById(int id)
-        {
-            var query = unitOfWork.OrderRepository.GetByID(id);
             return mapper.Map<OrderBO>(query);
         }
 
-        public OrderLineBO GetOrderLineById(int id)
-        {
-            var query = unitOfWork.OrderItemRepository.GetByID(id);
-            return mapper.Map<OrderLineBO>(query);
-        }
     }
 }

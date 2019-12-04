@@ -1,7 +1,7 @@
 ﻿function LoadProducts(id) {
     var http = new XMLHttpRequest();
 
-    http.open("GET", "../product/GetProductById/" + id, true);
+    http.open("GET", "../Product/GetProductById/" + id, true);
     http.send();
 
     http.onreadystatechange = function () {

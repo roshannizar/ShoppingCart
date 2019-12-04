@@ -10,17 +10,14 @@
         <button class="btn btn-primary btn-sm" hidden id="SaveChanges" onclick="Confirm()">Save Changes</button>
         <br /><br />
 
-        @foreach (var order in ViewBag.Order)
-        {
-            <partial name="PartialView/_OrderDetailCollapse" model="order" />
-        }
+        <partial name="PartialView/_OrderDetailCollapse" model="@Model" />
 
         <br />
         <div class="container-fluid">
             <h5 class="font-weight-bold">Order Items</h5>
         </div>
         <div class="list-group">
-            @foreach (var items in Model)
+            @foreach (var items in Model.OrderItems)
             {
                 <partial name="PartialView/_EditOrder" model="@items" />
             }

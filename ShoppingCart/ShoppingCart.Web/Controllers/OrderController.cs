@@ -82,23 +82,21 @@ namespace ShoppingCart.Web.Controllers
             try
             {
                 //Loads the orders
-                var ordersBO = orderService.GetOrderById(id);
-                ViewBag.Order = mapper.Map<IEnumerable<OrderViewModel>>(ordersBO);
+                var models = orderService.GetOrderById(id);
+                ViewBag.Order = mapper.Map<OrderViewModel>(models);
                 //Load the status
-                var StatusBO = orderService.GetSingleOrderById(id).Status;
+                var StatusBO = models.Status;
                 ViewBag.Status = mapper.Map<StatusTypeViewModel>(StatusBO);
 
                 if (ViewBag.Status != null)
                 {
-                    var models = orderService.GetOrderLineByOrderId(id);
-
                     if (models == null)
                     {
                         return NotFound();
                     }
                     else
                     {
-                        var model = mapper.Map<IEnumerable<OrderItemsViewModel>>(models);
+                        var model = mapper.Map<OrderViewModel>(models);
                         return View(model);
                     }
                 }

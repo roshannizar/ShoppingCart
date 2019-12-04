@@ -10,11 +10,11 @@ namespace ShoppingCart.Web.AutoMapper
     {
         public MapConfig()
         {
-            CreateMap<Order, OrderLine>().ReverseMap();
-
             CreateMap<OrderBO, Order>().ReverseMap();
             CreateMap<OrderLineBO, OrderLine>().ReverseMap();
+
             CreateMap<OrderBO, OrderLineBO>().ReverseMap();
+            CreateMap<Order, OrderLine>().ReverseMap();
 
             CreateMap<OrderViewModel, OrderBO>().ReverseMap();
             CreateMap<OrderPlacementViewModel, OrderBO>().ReverseMap();
